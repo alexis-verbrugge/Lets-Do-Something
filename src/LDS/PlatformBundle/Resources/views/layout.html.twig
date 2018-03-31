@@ -1,0 +1,102 @@
+{# src/LDS/PlatformBundle/Resources/views/layout.html.twig #}
+
+{% extends "::layout.html.twig" %}
+
+{% block title %}
+Let's Do Something - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+{# On définit un sous-titre commun à toutes les pages du bundle, par exemple #}
+{% block header %}
+<section class="container-fluid banner">
+  <div class="ban">
+    <img alt="banner" src="{{ asset('images/banner2.jpg') }}" >
+  </div>
+</section>
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <div class="col-lg-10">
+      <ul class="nav navbar-nav">
+       <li> <a href="{{ path('lds_platform_homepage') }}"><span class="glyphicon glyphicon-home"></span> &nbsp; Accueil</a> </li>
+       <li class="dropdown"> 
+        <a data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-search"></span>&nbsp;Rechercher<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li> <a href="{{ path('lds_platform_trouver_etablissement', {'id': 1, 'page' : 1}) }}">Rechercher établissement</a> </li>
+          <li> <a href="{{ path('lds_platform_trouver_evenement', {'id' : 1, 'page' : 1}) }}">Rechercher événement</a> </li>
+        </ul>
+      </li>    
+
+      {% if app.session.get('pro')=='ok'  %}
+      <li> <a href="{{ path('lds_platform_pro_liste_etablissement') }}"><span class="glyphicon glyphicon-cog"></span>&nbsp;Gérer mes établissements</a> </li>
+      <li> <a href="{{ path('lds_platform_pro_demande_tag') }}"><span class="glyphicon glyphicon-tags"></span>&nbsp; Proposer tag</a></li>
+      <li> <a href="{{ path('lds_platform_pro_message_admin') }}"><span class="glyphicon glyphicon-envelope"></span>&nbsp;Contacter Admin</a> </li>
+      {% endif %}
+
+
+      {% if app.session.get('particulier')=='ok'  %}
+      <li class="dropdown"> 
+            <a data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-star"></span>&nbsp;Mes favoris<b class="caret"></b></a>
+            <ul class="dropdown-menu">
+         <li> <a href="{{ path('lds_platform_particulier_liste_etablissement_favori')}}">Etablissements favoris</a> </li>
+          <li> <a href="{{ path('lds_platform_particulier_liste_evenement_favori')}}">Evenements favoris</a> </li>
+            </ul>
+          </li>     
+          <li class="dropdown">
+           <a data-toggle="dropdown" href="#">Groupes<b class="caret"></b></a>
+           <ul class="dropdown-menu">
+           <li> <a href="{{ path('lds_platform_particulier_liste_groupe_soiree') }}">Mes fiches soirées</a> </li>
+           <li> <a href="{{ path('lds_platform_particulier_invitations_groupe_soiree') }}">Invitations reçues</a> </li>
+           </ul>
+           </li>
+           
+      {% endif %}
+      {% if app.session.get('pro')=='ok' or app.session.get('particulier')=='ok' %}
+     <li> <a data-toggle="modal" href="#deconnexion"><span class="glyphicon glyphicon-off"></span>&nbsp;Deconnexion</a> </li>
+<div class="modal" id="deconnexion">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">x</button>
+        <h4 class="modal-title">Voulez vous vraiment vous deconnecter ?</h4>
+      </div>
+      <div class="modal-body">
+         <a href="{{ path('lds_platform_deconnexion') }}" class="btn btn-success">Oui</a>
+        <button class="btn btn-info" data-dismiss="modal">Non</button>
+      </div>
+    </div>
+  </div>
+</div>
+      {% else %}
+      <li> <a href="{{ path('lds_platform_connexion') }}"><span class="glyphicon glyphicon-off"></span>&nbsp;Connexion</a> </li>
+      <li class="dropdown"> 
+        <a data-toggle="dropdown" href="#"><span class=""></span>&nbsp;Inscription<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+         <li> <a href="{{ path('lds_platform_inscription_particulier') }}">Inscription particulier</a> </li>
+         <li> <a href="{{ path('lds_platform_inscription_professionnel', {'id': 1}) }}">Inscription professionnel</a> </li>
+       </ul>
+     </li>
+     {% endif %}  
+   </ul>
+ </div>
+</div>
+</nav>
+
+
+
+<!-- end header -->
+
+<!-- banner -->
+
+
+
+{% endblock %}
+
+{# On définit un nouveau bloc, que les vues du bundle pourront remplir #}
+{% block ldsplatform_body %}
+{% endblock %}
+
+{% endblock %}
+
+

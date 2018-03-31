@@ -1,0 +1,48 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %} 
+
+{% block title %}
+Vos invitations
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<div class="container">
+  <h3 class="text-center">Vos invitations</h3>
+
+
+  {% if listeInvitation is empty %}
+  <div class="alert alert-info text-center">
+    Vous n'avez aucune invitation
+  </div>
+  {% endif %}
+
+
+  {% for soiree in listeInvitation %}
+  <div class="col-sm-4 col-md-4 col-lg-4 col-lg-offset-4">
+   <div class="panel panel-primary">
+    <div class="panel-heading text-center"><span class="glyphicon glyphicon-envelope"></span> {{soiree.nom}}</div>
+    <div class="panel-body">
+      <p>
+        <strong>Nom</strong> : {{ soiree.nom }} <br>
+        <strong>Description</strong> : {{soiree.description}}<br>
+        <strong>Date</strong> : {{soiree.date|date("m/d/Y")}} <br>
+        <strong>Horaires</strong> : {{soiree.heureDebut|date('H')}}H{{soiree.heureDebut|date('i')}} à {{soiree.heureFin|date('H')}}H{{soiree.heureDebut|date('i')}}
+      </p>
+      <div class="text-center">
+        <a href="{{ path('lds_platform_particulier_rejoindre_groupe_soiree', {'id': soiree.id}) }}" class="btn btn-success">
+          <span class="glyphicon glyphicon-ok"></span>
+          Rejoindre 
+        </a>
+        <a href="{{ path('lds_platform_particulier_refuser_groupe_soiree', {'id' : soiree.id}) }}" class="btn btn-danger">
+          <span class="glyphicon glyphicon-trash"></span>
+          Refuser
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+</div>
+
+{% endblock ldsplatform_body %}

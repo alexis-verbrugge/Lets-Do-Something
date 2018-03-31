@@ -1,0 +1,101 @@
+{% extends "LDSPlatformBundle::layout_admin.html.twig" %}
+
+
+{% block title %}
+Liste des particuliers
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<div class="container">
+
+ <div class="text-center  col-md-offset-3 col-lg-offset-3">
+      <ul class="pagination">
+            {% if pagination.page>1 %}
+                <li><a href="{{ path(pagination.route,
+      pagination.route_params|merge({'page': 1})) }}"><<</a></li>
+                  <li><a href="{{ path(pagination.route,
+        pagination.route_params|merge({'page': pagination.page-1})) }}"><</a></li>
+                {% endif %}
+                {% for p in range(max(pagination.page-4, 1),min(pagination.page+4, pagination.pages_count)) %}
+                    <li {% if p == pagination.page %} class="active"{% endif %}><a href="{{ path(pagination.route,
+          pagination.route_params|merge({'page': p})) }}">{{ p }}</a></li>
+                  {% endfor %}
+                  {% if pagination.page<pagination.pages_count %}
+                      <li><a href="{{ path(pagination.route,
+            pagination.route_params|merge({'page': pagination.page+1})) }}">></a></li>
+                        <li><a href="{{ path(pagination.route,
+              pagination.route_params|merge({'page': pagination.pages_count})) }}">>></a></li>
+                      {% endif %}
+                </ul>
+          </div>
+
+
+
+          <div class="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
+            <h3 class="text-center">Liste des particuliers</h3>
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Pseudo</th>
+                  <th>Prénom</th>
+                  <th>Nom</th>
+                  <th>Email</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                {% if listeParticulier is empty %}
+                <div class="col-md-6 col-lg-6 col-lg-offset-3 text-center alert alert-info">
+                  Aucun particulier
+                </div>
+                {% endif %}
+
+                {% set i = 0 %}
+                {% for particulier in listeParticulier %}
+
+                <tr>
+                  <td><a href="{{ path('lds_platform_admin_detail_particulier', {'login': particulier.login}) }}">{{particulier.login}}</a></td>
+                  <td>{{particulier.prenom}}</td>
+                  <td>{{particulier.nom}}</td>
+                  <td>{{particulier.email}}</td>
+                  <td>
+                    <a href="{{ path('lds_platform_admin_detail_particulier', {'login': particulier.login}) }}" class="btn btn-primary">
+                      <span class="glyphicon glyphicon-search"></span>
+                      Détails
+                    </a>
+
+                    <a data-toggle="modal" href="#bannir_particulier{{i}}"  class="btn btn-danger">
+                      <span class="glyphicon glyphicon-trash"></span>
+                      Bannir 
+                    </a>
+                  </td>
+                </tr> 
+
+                <div class="modal" id="bannir_particulier{{i}}">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">x</button>
+                        <h4 class="modal-title">Voulez vous vraiment bannir {{particulier.login}} ?</h4>
+                      </div>
+                      <div class="modal-body">
+                       <a href="{{ path('lds_platform_admin_bannir_particulier', {'login' : particulier.login}) }}" class="btn btn-success">Oui</a>
+                       <button class="btn btn-info" data-dismiss="modal">Non</button>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+               {% set i = i + 1 %}
+               
+               {% endfor %}
+             </tbody>
+           </table>
+         </div>
+
+
+
+       </div>
+
+       {% endblock ldsplatform_body %} 

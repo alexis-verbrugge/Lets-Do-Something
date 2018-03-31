@@ -1,0 +1,84 @@
+
+{% extends "LDSPlatformBundle::layout.html.twig" %}
+
+
+{% block title %}
+Inscription professionnel
+{% endblock %}
+
+
+{% block ldsplatform_body %}
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="{{ asset('js/autocomplete_ville.js')}}"></script>
+
+{# src/OC/PlatformBundle/Resources/views/Advert/form.html.twig #}
+
+<div class="container-fluid">
+  <h3 class="text-center">Inscription professionnel</h3>
+
+
+  {{ form_start(form, {'attr': {'class': 'well col-xs-8 col-sm-8 col-md-6 col-lg-6 col-xs-offset-2 col-sm-offset-2 col-md-offset-3 col-lg-offset-3'}}) }}
+
+  {# Les erreurs générales du formulaire. #}
+  {{ form_errors(form) }}
+
+  <div class="row">
+
+   <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+    {# Génération du label + error + widget pour un champ. #}
+    {{ form_row(form.login) }}
+    {% if listeErreurs["erreur_login"] is defined %}
+    <p class="alert alert-danger"> {{ listeErreurs["erreur_login"] }}</p>
+    {% endif %}
+
+    {{ form_row(form.password) }}
+    {% if listeErreurs["erreur_password"] is defined %}
+    <p class="alert alert-danger"> {{ listeErreurs["erreur_password"] }} </p>
+    {% endif %}
+
+    {{ form_row(form.confirmer) }}
+
+    {{ form_row(form.nom) }}
+    {{ form_row(form.prenom) }}
+
+  </div>
+
+  <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+    {{ form_row(form.email) }}
+    {% if listeErreurs["erreur_mail"] is defined %}
+    <p class="alert alert-danger"> {{ listeErreurs["erreur_mail"] }}</p>
+    {% endif %}
+    {{ form_errors(form.email) }}
+
+    {{ form_row(form.telephone) }}
+    {{ form_row(form.codePostal, {'id': 'codePostal'}) }}
+
+    {{ form_row(form.ville, {'id': 'ville'}) }}
+    {% if listeErreurs["erreur_ville"] is defined %}
+    <p class="alert alert-danger"> {{listeErreurs["erreur_ville"]}}</p>
+    {% endif %}
+    <div id="match"></div>
+    {{ form_row(form.sexe) }}
+  </div>
+</div>
+
+
+{# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+
+<div class="row">
+  <div class="text-center">
+{{ form_widget(form.suivant, {'attr': {'class': 'btn btn-primary'}}) }}
+  </div>
+</div> 
+
+  {# Génération automatique des champs pas encore écrits.
+     Dans cet exemple, ce serait le champ CSRF (géré automatiquement par Symfony !)
+     et tous les champs cachés (type « hidden »). #}
+     {{ form_rest(form) }}
+
+     {# Fermeture de la balise <form> du formulaire HTML #}
+      {{ form_end(form) }}
+    </div>
+
+    {% endblock ldsplatform_body %}
+

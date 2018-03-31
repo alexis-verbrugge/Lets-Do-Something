@@ -1,0 +1,174 @@
+@charset "UTF-8";
+
+/* font-family: 'Raleway', sans-serif; */
+/* orange clair : FF8C17 */
+/* orange foncé : FF6517 */
+
+body, html {
+	padding: 0;
+	margin: 0;
+
+}
+
+body {
+	font-family: 'Raleway', sans-serif;
+
+}
+
+a, a:hover {
+	text-decoration: none;
+}
+
+.container-fluid {
+	padding: 0;
+}
+
+/* header */
+.header {
+	height: 50px;
+	line-height: 50px;	
+}
+
+.logo {
+	color: #000000;
+	text-transform: uppercase;
+	letter-spacing: 3px;
+	float: left;
+}
+
+.logo:hover {
+	color: #000000;
+	font-weight: bold;
+}
+
+.menu {
+	float: right;
+}
+
+.menu a {
+	color: #000000;
+	margin-right: 20px;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.menu a:hover {
+	color: orange;
+	font-weight: bold;
+}
+
+/* banner */
+.banner {
+	width: 100%;
+	max-width: 100%;
+
+
+}
+
+.ban {
+	width: 100%;
+	max-width: 100%;
+	
+}
+
+.ban img{
+	width: 100%;
+	max-width: 100%;
+}
+
+/* Formulaires */
+.modal-content .row {
+	margin-bottom: 20px;
+}
+
+.modal-content button[type="submit"] {
+	margin: 0;
+}
+
+.modal-content button {
+	color: black;
+	background-color: #FF8C17;
+	border: none;
+}
+
+.modal-content button:hover {
+	background-color: #FF6517;
+}
+
+/* recherche */
+.search form {
+	width: 60%;
+	max-width: 60%;
+	margin: auto;	
+}
+
+.search input[type=submit] {
+	height: 50px;
+	background-color: #FF8C17;
+	border: none;
+	color: white;
+	font-size: 30px;
+	text-transform: uppercase;
+}
+
+
+
+.search input[type=text] {
+	font-size: 1.3em;
+	font-weight: bold;
+	padding-left: 10px;
+	height: 60px;
+	color: #000000;
+}
+
+.search input[type=text]:hover::placeholder {
+  color: #666666;
+}
+
+.search input[type=text]:hover {
+	background-color: #eeeeee;
+	color: #000000;
+}
+
+.search input[type=text]:focus {
+	background-color: #dddddd;
+	color: #000000;
+}
+
+
+
+
+/* best etablissements */
+.meilleursEtablissements{
+	padding : 25px 60px 25px 60px;
+	margin-top: 50px;
+	
+	text-align: center;
+	background-color: #F5F5F5;
+
+}
+
+
+
+.meilleursEtablissements h2 {
+	text-transform: uppercase;
+	margin-top: 0px;
+	margin-bottom: 20px;
+	font-size: 25px;
+	font-weight: bold;
+}
+
+.meilleursEtablissements h3 {
+	margin: 5px;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.meilleursEtablissements img {
+	width: 150px;
+}
+
+
+.meilleursEtablissements .descriptionEtablissement {
+	font-style: italic;
+}

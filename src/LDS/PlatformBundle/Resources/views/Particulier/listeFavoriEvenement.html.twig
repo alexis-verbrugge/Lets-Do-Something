@@ -1,0 +1,43 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %} 
+
+{% block title %}
+Vos événements favoris
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<div class="container">
+	<h3 class="text-center">Vos événements favoris</h3>
+
+{% if listeFavori is empty %}
+<div class="text-center alert alert-info">
+Vous n'avez pas d'événement favori
+</div>
+{% endif %}
+
+
+	{% for evenement in listeFavori %}
+	<div class="col-lg-4">
+		<div class="panel panel-default">
+			<div class="panel-heading text-center"><a href="{{ path('lds_platform_evenement_detail', {'id': evenement.id , 'id2' : 1}) }}"><h4>{{ evenement.nom }}</h4> </a></div>
+			<div class="panel-body">
+				<p>
+					{% if evenement.photo1 != "" %}
+					<img src="{{ asset('uploads/avatar/' ~ evenement.photo1) }} "width="50px" height="50px"><br><br>
+					{% endif %}
+				</p>
+
+				<strong>{{ evenement.etablissement.ville }}</strong> <i> {{evenement.etablissement.codePostal}} </i>
+
+
+
+
+			</div>
+		</div>
+	</div>
+
+			{% endfor %}
+
+
+</div>
+{% endblock ldsplatform_body %}

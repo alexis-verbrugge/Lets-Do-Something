@@ -1,0 +1,80 @@
+public class Sommet {
+ 
+ private int id;
+ private Arete liste_adj;
+ private Sommet suivant;
+ 
+ private boolean marqueur;
+ 
+ private String symbole_marquage;
+ public Sommet(int i) {
+  this.id=i;
+  this.liste_adj=null;
+  this.suivant=null;
+  this.marqueur=false;
+  this.symbole_marquage=" ";
+ }
+ public Sommet getSuivant() {
+  return this.suivant;
+ }
+ public void setSuivant(Sommet s) {
+  this.suivant=s;
+ }
+ public int getId() {
+  return this.id;
+ }
+ // Methode permettant d'ajouter une nouvelle arrete au graphe
+  public void addArrete(int arrivee, int capacite, int flot) {
+  if (liste_adj==null) {
+   //la nouvelle arete prend comme parametres l'id du sommet actuel, un sommet
+   //d'arrivée, une capacité et un flot
+   this.liste_adj= new Arete(this.id, arrivee, capacite, flot);
+  } else {
+   Arete a=liste_adj;
+   while((a.getSuivant()!=null)) {
+    a=a.getSuivant();
+   }
+   a.setSuivant(new Arete(this.id, arrivee, capacite, flot));
+   }
+  }
+  
+  //methode permettant d'afficher toutes les aretes d'un sommet
+  public void afficheArete() {
+   if (liste_adj==null) {
+   System.out.println("Aucune arrete pour le sommet("+this.id+")");
+  } else {
+   Arete a=liste_adj;
+   int count=1;
+   while((a!=null)) {
+    System.out.println("Arrete " + count + " (origine="+this.id+", arrivee="+a.getArrivee()+", capacite"+a.getCapacite()+", flot="+a.getFlot()+")");
+    a=a.getSuivant();
+    count++;
+   }
+   }
+  }
+  
+  
+  //on gere ici le marquage du sommet
+  public void setSymboleMarquage(String s) {
+           this.symbole_marquage = s;
+           this.marqueur = true;
+         }
+  
+         public String getSymboleMarquage() {
+           return this.symbole_marquage;
+         }
+        
+         public boolean estMarque() {
+               return this.marqueur;
+         }
+        
+         public void supprimerMarqueur() {
+               this.symbole_marquage = " ";
+               this.marqueur = false;
+         }
+
+         public Arete getListeAdjacence() {
+         	return this.liste_adj;
+         }
+}
+

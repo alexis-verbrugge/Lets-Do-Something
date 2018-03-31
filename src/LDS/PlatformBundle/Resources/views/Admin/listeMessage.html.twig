@@ -1,0 +1,140 @@
+{% extends "LDSPlatformBundle::layout_admin.html.twig" %}
+
+
+{% block title %}
+Messages des membres
+{% endblock %}
+
+{% block javascript %}
+
+{% endblock %}
+
+{% block ldsplatform_body %}
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+       <script>
+      $(function(){
+        $("form").submit(function(e) {
+          data = {contenu: $(this).parent().find('textarea').val()};
+           $.ajax({
+                             type: "POST",
+                             url: "{{path('ajax_repondre')}}", // call the php file ajax/tuto-autocomplete.php (check the routine we defined)
+                             data: data, // Send dataFields var
+                             dataType: 'json',
+                             success: function(response){
+                               $('#test').text('test');
+                             },
+                               error: function() { // if error
+                                     $('#test').text('Problem!');
+                             } // json method
+                             }); 
+          
+          });
+        });
+      </script>
+<div class="container">
+  <h3 class="text-center">Messages des membres</h3>
+
+
+  <div class="text-center">
+        <ul class="pagination">
+      {% if count>4 %}
+              {% if pagination.page>1 %}
+                  <li><a href="{{ path(pagination.route,
+        pagination.route_params|merge({'page': 1})) }}"></a></li>
+                    <li><a href="{{ path(pagination.route,
+          pagination.route_params|merge({'page': pagination.page-1})) }}"><</a></li>
+                  {% endif %}
+                  {% for p in range(max(pagination.page-4, 1),min(pagination.page+4, pagination.pages_count)) %}
+                      <li {% if p == pagination.page %} class="active"{% endif %}><a href="{{ path(pagination.route,
+            pagination.route_params|merge({'page': p})) }}">{{ p }}</a></li>
+                    {% endfor %}
+                    {% if pagination.page<pagination.pages_count %}
+                        <li><a href="{{ path(pagination.route,
+              pagination.route_params|merge({'page': pagination.page+1})) }}">></a></li>
+                          <li><a href="{{ path(pagination.route,
+                pagination.route_params|merge({'page': pagination.pages_count})) }}">>></a></li>
+                        {% endif %}
+                {% endif %}
+              </ul>
+            </div>
+            
+
+            {% if aucun_message["oui"] is defined %}
+            <div class="col-md-6 col-lg-6 col-lg-offset-3 text-center alert alert-info">
+              {{aucun_message["oui"]}}
+            </div>
+            {% endif %}
+
+             {% set i = 0 %}
+            {% for message in listeMessage %}
+            
+            <div class="panel-group col-md-6 col-lg-6">
+              <div class="panel panel-default">
+                <div class="text-center panel-heading"><h5>{{message.titre}}</h5></div>
+                <div class="panel-body">
+                  <p>De <strong>{{message.user}}</strong><br>Le {{message.date|date("d/m/Y") }}<br>A {{message.date|date('H') }}H{{message.date|date('i:s') }}</p>
+                  <p><strong>Objet</strong> : {{message.titre}}</p>
+                  <p><strong>Message : </strong><br>
+                  "{{message.message}}"</p>
+                  <div class="text-center">
+                    <div id="html">
+        <button data-toggle="modal" data-backdrop="false" href="#formulaire" class="btn btn-primary"> <i class="glyphicon glyphicon-envelope"></i>Repondre</button>
+      </div>
+      <div class="modal fade" id="formulaire">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">x</button>
+            </div>
+            <div class="modal-body">
+             <form method="POST" class="ajaxForm" action="{{path('lds_platform_admin_repondre_message', {id: message.id}) }}">
+                <div class="form-group">
+                   <label for="comment">Message:</label>
+                   <textarea class="form-control" rows="5" id="comment"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </div>
+          </form>
+            <div class="modal-footer">
+              <button class="btn btn-info" data-dismiss="modal">Annuler</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </a>
+    <a data-toggle="modal" href="#supprimer_message{{i}}" class="btn btn-danger">
+      <i class="glyphicon glyphicon-trash"></i>
+      Supprimer message
+    </a>
+
+    <div class="modal" id="supprimer_message{{i}}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">x</button>
+        <h4 class="modal-title">Voulez vous vraiment suuprimer ce message sans y'avoir répondu ?</h4>
+      </div>
+      <div class="modal-body">
+         <a href="{{ path('lds_platform_admin_effacer_message', {'id': message.id}) }}" class="btn btn-success">Oui</a>
+        <button class="btn btn-info" data-dismiss="modal">Non</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <br><br>
+
+    {% set i = i + 1 %}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {% endfor %}
+
+
+
+          </div>
+          {% endblock ldsplatform_body %}

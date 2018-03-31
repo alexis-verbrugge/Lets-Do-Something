@@ -1,0 +1,36 @@
+{# src/OC/PlatformBundle/Resources/views/layout.html.twig #}
+
+{% extends "::layout.html.twig" %}
+
+{% block title %}
+  Let's Do Something - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+ {% block header %}
+ <nav class="navbar navbar-default" role="navigation">
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul class="nav navbar-nav">
+            <li> <a href="{{ path('lds_platform_admin_liste_message', {'page': 1}) }}"><span class="glyphicon glyphicon-envelope"></span> &nbsp; Messages des membres</a> </li>
+            <li> <a href="{{ path('lds_platform_admin_liste_demande_etablissement', {'page': 1}) }}"><span class="glyphicon glyphicon-th-list"></span> &nbsp; Demandes d'etablissement</a> </li>
+            <li> <a href="{{ path('lds_platform_admin_liste_demande_evenement', {'page': 1}) }}"><span class="glyphicon glyphicon-th-list"></span> &nbsp; Demandes d'evenements</a> </li>
+            <li> <a href="{{ path('lds_platform_admin_liste_demande_tag', {'page': 1}) }}" ><span class="glyphicon glyphicon-tags"></span> &nbsp; Demandes de tag</a> </li>
+            <li> <a href="{{ path('lds_platform_admin_liste_particulier', {'page': 1}) }}"><span class="glyphicon glyphicon-user"></span> &nbsp; Liste des particuliers</a> </li>
+            <li> <a href="{{ path('lds_platform_admin_etablissement', {'page': 1}) }}"><span class="glyphicon glyphicon-user"></span> &nbsp; Liste des établissements</a> </li>
+            <li> <a href="{{ path('lds_platform_inscription_etablissement', {'id': 3, 'id2': 1}) }}"><span class="glyphicon glyphicon-plus"></span> &nbsp; Ajouter un établissement</a> </li>
+       
+          
+      
+          </ul>
+        </div><!-- /.navbar-collapse -->
+      </nav>
+
+{% endblock %}
+
+
+
+  {% block ldsplatform_body %}
+  {% endblock %}
+
+{% endblock %}

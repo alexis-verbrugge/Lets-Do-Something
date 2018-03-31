@@ -1,0 +1,3 @@
+services:
+    lds_platform.calculLongitude:
+        class: LDS\PlatformBundle\CalculsLongitude\LDSCalculLongitude

@@ -1,0 +1,111 @@
+{% extends id==3 ? "LDSPlatformBundle::layout_admin.html.twig" : "LDSPlatformBundle::layout.html.twig"  %}
+
+{% block title %}
+  Evenement : {{ evenement.nom }}
+{% endblock %}
+
+{% block ldsplatform_body %}
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <div class="container">
+
+    {% if app.session.get('particulier') == 'ok' %}
+      {% if estFavori == false %}
+        <a onmouseover="fillStar()" onmouseout="emptyStar()" href="{{ path('lds_platform_particulier_ajouter_evenement_favori' , {'id': evenement.id}) }}" ><span id="star" class="fa fa-star-o fa-4x"></span><p>Ajoutez à vos favoris</p></a>
+      {% elseif estFavori == true %}
+       <a onmouseover="emptyStar()" onmouseout="fillStar()" href="{{ path('lds_platform_particulier_supprimer_evenement_favori' , {'id': evenement.id}) }}" ><span id="star" class="fa fa-star fa-4x"></span><p>Retirez de vos favoris</p></a>
+     {% endif %}
+   {% else %}
+     Connectez vous afin d'ajouter cet evenement à vos favoris.<br>
+   {% endif %}
+
+   {% if id==2 %}
+   </a>
+   <a href="{{ path('lds_platform_detail', {'siret': evenement.etablissement.siret, 'id' : id}) }}" class="btn btn-primary">
+    <i class="glyphicon glyphicon-chevron-left"></i>
+    Retour
+  </a> <br>
+{% endif %}
+<div class="col-md-offset-6 col-lg-offset-6">
+</div>
+
+<h2 class="text-center">{{ evenement.nom }}</h2>
+<p class="text-center bg-info">Evenement</p>
+
+<div class="row">
+  <div class="col-md-offset-9 col-lg-offset-9">
+    {% if id==2 %}
+      <a href="{{ path('lds_platform_pro_modifier_evenement', {'id': evenement.id}) }}" class="btn btn-primary">
+        <i class="glyphicon glyphicon-cog"></i>
+        Modifier informations
+      </a> <br> <br>
+    {% endif %}
+  </div>
+</div>
+
+
+<div class="row">
+
+  <div class="col-md-4 col-lg-4">
+    <div class="panel panel-success">
+      <div class="panel-heading text-center"><span class="glyphicon glyphicon-camera"></span> Photos</div>
+      <div class="panel-body">
+        {% if evenement.photo1 != "" %}  
+          <img src="{{ asset('uploads/avatar/' ~ evenement.photo1) }} "width="100px" height="100px">
+        {% endif %}
+        {% if evenement.photo2 != "" %}
+          <img src="{{ asset('uploads/avatar/' ~ evenement.photo2) }} "width="100px" height="100px">
+        {% endif %}
+
+        {% if evenement.photo3 != "" %}
+          <img src="{{ asset('uploads/avatar/' ~ evenement.photo3) }} "width="100px" height="100px">
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-4 col-lg-4">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center"><span class="glyphicon glyphicon-pencil"></span> Description</div>
+      <div class="panel-body text-justify">
+        {{ evenement.description }}
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="col-md-4 col-lg-4 panel-group">
+    <div class="panel panel-info">
+      <div class="panel-heading text-center"><span class="glyphicon glyphicon-info-sign"></span> Informations</div>
+      <div class="panel-body">
+        <p><strong>Etablissement</strong> : <a href="{{ path('lds_platform_detail', {'siret': evenement.etablissement.siret, 'id':1}) }}">{{ evenement.etablissement.nomEtablissement }}</a></p>
+        <p>{{ evenement.etablissement.ville }}<br>
+          {{ evenement.etablissement.codePostal }}</p>
+          <p>
+            <span class="glyphicon glyphicon-calendar "></span> {{evenement.dateDebut|date("d") }}/{{evenement.dateDebut|date("m") }}/{{evenement.dateDebut|date("Y") }} - {{evenement.dateFin|date("d") }}/{{evenement.dateFin|date("m") }}/{{evenement.dateFin|date("Y") }}<br>
+            <span class="glyphicon glyphicon-time "></span> {{evenement.heureDebut|date('H')}}H{{evenement.heureDebut|date('i')}} à {{evenement.heureFin|date('H')}}H{{evenement.heureFin|date('i')}}<br>
+            <strong>@ </strong>{{evenement.etablissement.email}} <br>
+            <span class="glyphicon glyphicon-earphone"></span>{{evenement.etablissement.telephone}}<br>
+            <span class="glyphicon glyphicon-tags"></span>
+            {% for tag in evenement.etablissement.tags %} 
+              {{ tag.nom }} 
+            {% endfor %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+  function fillStar() {
+    document.getElementById("star").setAttribute("class", "fa fa-star fa-4x");
+  }
+
+  function emptyStar() {
+    document.getElementById("star").setAttribute("class", "fa fa-star-o fa-4x");
+  }     
+  </script>
+
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %} 
+
+{% block title %}
+Fiche soirée : {{soiree.nom}}
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<div class="container">
+	<h2 class="text-center">{{soiree.nom}}</h2>
+	<p class="text-center bg-success">Fiche soirée</p>
+
+	<div class="row">
+
+		<div class="col-md-4 col-lg-4">
+			<div class="panel panel-default">
+				<div class="panel-heading text-center"><span class="glyphicon glyphicon-pencil"></span> Description</div>
+				<div class="panel-body text-justify">
+					{{ soiree.description }}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">
+			<div class="panel panel-info">
+				<div class="panel-heading text-center"><span class="glyphicon glyphicon-info-sign"></span> Informations</div>
+				<div class="panel-body">
+					<p>
+						<strong>Organisateur</strong> : {{organisateur}} <br>
+						<strong>Etablissement</strong> : <a href="{{ path('lds_platform_detail', {'siret': soiree.etablissement.siret,'id': idzer }) }}"> {{soiree.etablissement.nomEtablissement}}</a> <br>
+					</p>
+
+
+				</div>
+			</div>
+		</div>
+		
+
+
+	</div>
+
+	<div class="row">
+		<div class="col-md-4 col-lg-4">
+			<div class="panel panel-primary">
+				<div class="panel-heading text-center"><span class="glyphicon glyphicon-plus"></span> Invitation</div>
+				<div class="panel-body">
+					{% if loginIntrouvable is not null %}
+					<div class="alert alert-danger text-center">{{loginIntrouvable}}</div>
+					{% endif %}
+					{{form(invitation)}}
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4 col-lg-4">
+			<div class="panel panel-primary">
+				<div class="panel-heading text-center"><span class="glyphicon glyphicon-user"></span> Participants</div>
+				<div class="panel-body">
+					{% if listeParticipe is empty %}
+					<p>Aucun participant pour le moment</p>
+					{% else %}
+					{% for particulier in listeParticipe %}
+
+					<img src="{{ asset('uploads/avatar/' ~ particulier.avatar) }} "width="50px" height="50px">
+					{{particulier.login}}  <br>
+
+					{% endfor %}<br>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 col-lg-4">
+			<div class="panel panel-primary">
+				<div class="panel-heading text-center"><span class="glyphicon glyphicon-user"></span> Invités</div>
+				<div class="panel-body">
+					{% if listeInvite is empty %}
+					<p>Aucun invites pour le moment</p>
+					{% else %}
+					{% for invite in listeInvite %}
+
+					<img src="{{ asset('uploads/avatar/' ~ invite.avatar) }} "width="50px" height="50px">
+					{{invite.login}}  <br>
+
+					{% endfor %}<br>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4 col-lg-4">
+			<div class="panel panel-primary">
+				<div class="panel-heading text-center"><span class="glyphicon glyphicon-comment"></span> Messages</div>
+				<div class="panel-body">
+					<h4 class="text-center">Poster un message</h4>
+					{{form(form)}}
+
+					{% if listeMessage is empty %}
+					<div class="alert alert-info text-center">Aucun message</div>
+					{% endif %}
+
+					{% set i=0 %}
+					{% if listeMessage is not empty %}
+					<div style="overflow:scroll; max-height:300px;">
+						{% endif %}
+						
+						{% for message in listeMessage %}
+						{% set i=i+1 %}
+						<div style="border: solid #777777 1px; padding-left: 20px; padding-rifht: 20px;">
+							<div class="text-right"><strong>#{{i}}</strong></div>
+							<img src="{{ asset('uploads/avatar/' ~ message.particulier.avatar) }} "width="50px" height="50px">
+							Posté par <strong>{{message.particulier.login}}</strong><br>
+
+							le <strong>{{message.date|date("d/m/Y") }}</strong><br><br>
+							{{message.commentaire}}<br><br>
+						</div><br>
+						{% endfor %} <br>
+						{% if listeMessage is not empty %}
+					</div>
+					{% endif %}
+
+				</div>
+			</div>
+		</div>
+
+
+
+	</div>
+</div>
+{% endblock ldsplatform_body %}
+
+

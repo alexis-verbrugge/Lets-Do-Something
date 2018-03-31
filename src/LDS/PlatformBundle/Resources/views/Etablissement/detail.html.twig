@@ -1,0 +1,352 @@
+{% extends id==3 ? "LDSPlatformBundle::layout_admin.html.twig" : "LDSPlatformBundle::layout.html.twig"  %}
+
+
+{% block title %}
+Etablissement : {{ etablissement.nomEtablissement }}
+{% endblock %}
+
+{% block ldsplatform_body %}
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<style>
+#map {
+	width:100%;
+	height:625px;
+}
+/* Optional: Makes the sample page fill the window. */
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+</style>
+
+<div class="container">
+
+	{% if app.session.get('particulier')=='ok' %}
+	{% if estFavori == false %}
+	<a onmouseover="fillStar()" onmouseout="emptyStar()"  href="{{ path('lds_platform_particulier_ajouter_etablissement_favori' , {'siret': etablissement.siret}) }}" ><span id="star" class="fa fa-star-o fa-4x"></span><p>Ajoutez à vos favoris</p></a>
+	{% elseif estFavori == true %}
+	<a  onmouseover="emptyStar()" onmouseout="fillStar()" href="{{ path('lds_platform_particulier_supprimer_etablissement_favori' , {'siret': etablissement.siret}) }}" ><span id="star" class="fa fa-star fa-4x"></span><p>Retirez de vos favoris</p></a>
+
+	{% else %}
+	<p>Connectez vous afin d'ajouter cet établissement à vos favoris.</p>
+	{% endif %}
+	{% endif %}
+
+	{% if id==2 %}
+	<a href="{{ path('lds_platform_pro_liste_etablissement') }}" class="btn btn-primary">
+		<span class="glyphicon glyphicon-chevron-left"></span> Retour </a>
+
+		{% endif %}
+
+		<h2 class="text-center">{{ etablissement.nomEtablissement }}</h2>
+
+		<div class="text-right">
+			{% if app.session.get('particulier')=='ok' %}
+			<a  href="{{ path('lds_platform_particulier_creer_fiche_soiree' , {'siret': etablissement.siret}) }}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Créer une fiche soirée</a><br><br>
+
+			{% endif %}
+		</div>
+
+		<div class="row">
+			<div class="col-md-offset-9 col-lg-offset-9">
+				{% if id==2 %}
+				<a href="{{ path('lds_platform_pro_modifier_etablissement', {'siret': etablissement.siret}) }}" class="btn btn-primary">
+					<span class="glyphicon glyphicon-cog"></span>Modifier les informations</a> <br><br>
+					{% endif %}
+				</div>
+			</div>
+
+
+
+			<div class="row">
+
+				<div class="col-md-4 col-lg-4">
+					<div class="panel panel-success">
+						<div class="panel-heading text-center"><span class="glyphicon glyphicon-camera"></span> Photos</div>
+						<div class="panel-body">
+							{% if etablissement.photo1 != "" %}  
+							<img src="{{ asset('uploads/avatar/' ~ etablissement.photo1) }} "width="100px" height="100px">
+							{% endif %}
+							{% if etablissement.photo2 != "" %}
+							<img src="{{ asset('uploads/avatar/' ~ etablissement.photo2) }} "width="100px" height="100px">
+							{% endif %}
+
+							{% if etablissement.photo3 != "" %}
+							<img src="{{ asset('uploads/avatar/' ~ etablissement.photo3) }} "width="100px" height="100px">
+							{% endif %}
+
+							{% if etablissement.photo4 != "" %}
+							<img src="{{ asset('uploads/avatar/' ~ etablissement.photo4) }} "width="100px" height="100px">
+							{% endif %}
+
+							{% if etablissement.photo5 != "" %}
+							<img src="{{ asset('uploads/avatar/' ~ etablissement.photo5) }} "width="100px" height="100px">
+							{% endif %}
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-md-4 col-lg-4">
+					<div class="panel panel-default">
+						<div class="panel-heading text-center"><span class="glyphicon glyphicon-pencil"></span> Description</div>
+						<div class="panel-body text-justify">
+							{{ etablissement.description }}
+						</div>
+					</div>
+				</div>
+
+				<div class="col-md-4 col-lg-4 panel-group">
+					<div class="panel panel-info">
+						<div class="panel-heading text-center"><span class="glyphicon glyphicon-info-sign"></span> Informations</div>
+						<div class="panel-body">
+							<p> Note : <strong>{{ etablissement.moyenne }}/5 ({{etablissement.nombreNote}} votes) </strong></p>
+							{{etablissement.adresse}}<br>
+							<strong>{{ etablissement.ville }}</strong><br>
+
+							{{ etablissement.codePostal }}
+						</p>
+							<span class="glyphicon glyphicon-time "></span><strong> Horaires</strong> :<br>
+
+							<strong>Lundi</strong> :
+							{% if etablissement.heureOuvertureLundi == "" %}
+							Fermé
+							{% else %}
+							{{etablissement.heureOuvertureLundi|date('H') }}H{{etablissement.heureOuvertureLundi|date('i') }} à {{etablissement.heureFermetureLundi|date('H') }}H{{etablissement.heureFermetureLundi|date('i') }}<br>
+							{% endif %}
+
+							<strong>Mardi</strong> :
+							{% if etablissement.heureOuvertureMardi == null %}
+							<strong>Fermé</strong><br>
+							{% else %}
+							{{etablissement.heureOuvertureMardi|date('H') }}H{{etablissement.heureOuvertureMardi|date('i') }} à {{etablissement.heureFermetureMardi|date('H') }}H{{etablissement.heureFermetureMardi|date('i') }}<br>
+							{% endif %}							
+
+							<strong>Mercredi</strong> :
+							{% if etablissement.heureOuvertureMercredi == null %}
+							<strong>Fermé</strong><br>
+							{% else %}
+							{{etablissement.heureOuvertureMercredi|date('H') }}H{{etablissement.heureOuvertureMercredi|date('i') }} à {{etablissement.heureFermetureMercredi|date('H') }}H{{etablissement.heureFermetureMercredi|date('i') }}<br>
+							{% endif %}
+
+							<strong>Jeudi</strong> :
+							{% if etablissement.heureOuvertureJeudi == null %}
+							<strong>Fermé</strong><br>
+							{% else %}
+							{{etablissement.heureOuvertureJeudi|date('H') }}H{{etablissement.heureOuvertureJeudi|date('i') }} à {{etablissement.heureFermetureJeudi|date('H') }}H{{etablissement.heureFermetureJeudi|date('i') }}<br>
+							{% endif %}
+
+							<strong>Vendredi</strong> :
+							{% if etablissement.heureOuvertureVendredi == null %}
+							<strong>Fermé</strong><br>
+							{% else %}
+							{{etablissement.heureOuvertureVendredi|date('H') }}H{{etablissement.heureOuvertureVendredi|date('i') }} à {{etablissement.heureFermetureVendredi|date('H') }}H{{etablissement.heureFermetureVendredi|date('i') }}<br>
+							{% endif %}
+
+							<strong>Samedi</strong> :
+							{% if etablissement.heureOuvertureSamedi == null %}
+							<strong>Fermé</strong><br>
+							{% else %}
+							{{etablissement.heureOuvertureSamedi|date('H') }}H{{etablissement.heureOuvertureSamedi|date('i') }} à {{etablissement.heureFermetureSamedi|date('H') }}H{{etablissement.heureFermetureSamedi|date('i') }}<br>
+							{% endif %}
+
+							<strong>Dimanche</strong> :  
+							{% if etablissement.heureOuvertureDimanche == null %}
+							<strong>Fermé</strong><br>
+							{% else %}
+							{{etablissement.heureOuvertureDimanche|date('H') }}H{{etablissement.heureOuvertureDimanche|date('i') }} à {{etablissement.heureFermetureDimanche|date('H') }}H{{etablissement.heureFermetureDimanche|date('i') }}<br>
+							{% endif %}							
+
+
+							<br>
+							<span class="glyphicon glyphicon-earphone"></span> {{etablissement.telephone}}<br>
+							<span class="glyphicon glyphicon-tags"></span>{% for tag in etablissement.tags %} 
+							{{ tag.nom }} 
+							{% endfor %}
+						</div>
+					</div>
+				</div>        
+			</div>
+
+			<div class="row">
+				<div class="col-md-8 col-lg-8">
+					<div class="panel panel-primary">
+						<div class="panel-heading text-center"><span class="glyphicon glyphicon-globe"></span> Localisation</div>
+						<div class="panel-body">
+							<div id="map"></div>
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="col-md-4 col-lg-4 panel-group">
+					<div class="panel panel-primary">
+						<div class="panel-heading text-center">Prochain événement</div>
+						<div class="panel-body">
+							<div class="panel-group">
+								{% set i = 0 %}
+								{% if listeEvenement is empty %}
+								<div class="alert alert-info text-center">Aucun événement</div>
+								{% endif %}
+								{% for evenement in listeEvenement %}
+
+								<div class="panel panel-default">
+									<div class="panel-heading text-center">{{ evenement.nom }} </div>
+									<div class="panel-body">
+										<p><span class="glyphicon glyphicon-calendar "></span> {{evenement.dateDebut|date("d/m/Y") }} - {{evenement.dateFin|date("d/m/Y") }}<br>
+											<span class="glyphicon glyphicon-time "></span> {{evenement.heureDebut|date('H') }}H{{evenement.heureDebut|date('i') }} à {{evenement.heureFin|date('H') }}H{{evenement.heureFin|date('i') }}<br>
+										{{evenement.description }}</p>
+
+										<div class="text-center">
+											<a href="{{ path('lds_platform_evenement_detail', {'id': evenement.id, 'id2' : id}) }}" class="btn btn-primary">
+												<i class="glyphicon glyphicon-search"></i>
+												Detail
+											</a>
+										</div>
+
+										{% if id==2 or id==3 %}
+										<div class="text-center">
+											<a data-toggle="modal" href="#supprimer_evenement{{i}}" class="btn btn-danger">
+												<i class="glyphicon glyphicon-trash"></i>
+												Supprimer
+											</a> <br>
+											<div class="modal" id="supprimer_evenement{{i}}">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="modal-header">
+															<button type="button" class="close" data-dismiss="modal">x</button>
+															<h4 class="modal-title">Voulez vous vraiment supprimer {{evenement.nom}} ?</h4>
+														</div>
+														<div class="modal-body">
+															<a href="{{ path('lds_platform_pro_supprimer_evenement', {'id': evenement.id}) }}" class="btn btn-success">Oui</a>
+															<button class="btn btn-info" data-dismiss="modal">Non</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+
+
+										{% endif %}
+									</div>
+								</div>
+
+								{% set i = i + 1 %}
+								{% endfor %} <br>
+							</div>
+
+							{% if id==2 %}
+						</a>
+						<div class="text-center">
+							<a href="{{ path('lds_platform_pro_creer_evenement', {'siret': etablissement.siret}) }}" class="btn btn-primary">
+								<i class="glyphicon glyphicon-plus"></i>
+								Créer un événement
+							</a> </div>
+							{% endif %}
+						</div>
+					</div>
+
+					<div class="panel panel-primary">
+						<div class="panel-heading text-center"><span class="glyphicon glyphicon-comment"></span> Commentaires</div>
+						<div class="panel-body">
+
+							{% if app.session.get('particulier')=='ok' %}
+							{% if monCommentaire|length < 1 %}
+							<h4 class="text-center"> Poster votre avis </h4>
+							{{ form(form) }}
+							{% else %}
+							<strong>Mon commentaire</strong><br>
+							le <strong>{{monCommentaire.date|date("d/m/Y") }}</strong> à {{monCommentaire.date|date('H')}}H{{monCommentaire.date|date('i')}}:{{monCommentaire.date|date('s') }}<br><br>
+								Note : <strong>{{monCommentaire.note}}/5</strong> <br>
+								{{monCommentaire.commentaire}}<br><br>
+								<a data-toggle="modal" href="#enlever_commentaire"  class="btn btn-danger">
+                     			 <span class="glyphicon glyphicon-trash"></span>
+                      			Enlever 
+                    			</a>
+                    			 <div class="modal" id="enlever_commentaire" >
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">x</button>
+                              <h4 class="modal-title">Voulez vous vraiment enlever votre commentaire de {{etablissement.nomEtablissement}} ?</h4>
+                            </div>
+                            <div class="modal-body">
+                             <a href="{{ path('lds_platform_supprimer_commntaire', {'id': monCommentaire.id, 'redirection': 0}) }}" class="btn btn-success">Oui</a>
+                             <button class="btn btn-info" data-dismiss="modal">Non</button>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+							</div><br>
+							{% endif %}
+							{% endif %}
+							{% set i=0 %}
+							{% if listeCommentaire is not empty %}
+							<div style="overflow:scroll; max-height:600px;">
+							{% endif %}
+							{% for commentaire in listeCommentaire %}
+							{% set i=i+1 %}
+
+							<div style="border: solid #777777 1px; padding-left: 20px; padding-rifht: 20px;">
+								<div class="text-right"><strong>#{{i}}</strong></div>
+								<img src="{{ asset('uploads/avatar/' ~ commentaire.particulier.avatar) }} "width="50px" height="50px">
+								
+								Posté par <strong>{{commentaire.particulier.login}}</strong><br>
+								
+								le <strong>{{commentaire.date|date("d/m/Y") }}</strong> à {{commentaire.date|date('H')}}H{{commentaire.date|date('i')}}:{{commentaire.date|date('s') }}<br><br>
+								Note : <strong>{{commentaire.note}}/5</strong> <br>
+								{{commentaire.commentaire}}<br><br>
+							</div><br>
+							{% endfor %} <br>
+							{% if listeCommentaire is not empty %}
+							</div>
+							
+
+
+
+							{% endif %}
+						</div>
+					</div>
+
+					<script>
+
+					function initMap() {
+						var lati = {{etablissement.lattitude|json_encode()}};
+						var long = {{etablissement.longitude|json_encode()}};
+
+						var carte = new google.maps.Map(document.getElementById('map'), {
+							zoom: 15,
+							center: {lat: lati, lng: long}
+						});
+
+						marq = new google.maps.Marker({
+      position: {lat: lati, lng: long},//coordonnée de la position du clic sur la carte
+      map: carte//la carte sur laquelle le marqueur doit être affiché
+  });
+					}
+					</script>
+				</script>
+				<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+				</script>
+				<script async defer
+				src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-ZoCVAWHAKhfRq_SYGOOZUYim7Vl_M9A &callback=initMap">
+				</script>
+
+
+
+
+
+			</div>
+
+			<script>
+			function fillStar() {
+				document.getElementById("star").setAttribute("class", "fa fa-star fa-4x");
+			}
+
+			function emptyStar() {
+				document.getElementById("star").setAttribute("class", "fa fa-star-o fa-4x");
+			}			
+			</script>
+			{% endblock ldsplatform_body%}

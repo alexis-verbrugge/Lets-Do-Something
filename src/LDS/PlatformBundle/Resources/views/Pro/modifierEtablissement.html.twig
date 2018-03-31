@@ -1,0 +1,206 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %}
+
+
+{% block title %}
+  Inscription professionnel
+{% endblock %}
+
+{% block javascripts %}
+  <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script type="text/javascript" src="{{ asset('js/autocomplete_ville.js')}}"></script>
+  <script>
+  
+      function initMap() {
+        var lati = {{etablissement.lattitude|json_encode()}};
+        var long = {{etablissement.longitude|json_encode()}};
+         var data;
+
+        var carte = new google.maps.Map(document.getElementById('map'), {
+          zoom: 15,
+          center: {lat: lati, lng: long}
+        });
+
+      marq = new google.maps.Marker({
+      position: {lat: lati, lng: long},//coordonnée de la position du clic sur la carte
+      map: carte//la carte sur laquelle le marqueur doit être affiché
+    });
+    marq.setDraggable(true);
+
+    google.maps.event.addListener(marq, 'dragend', function(event) {
+      var lat = marq.getPosition().lat();
+      var lng = marq.getPosition().lng();
+    data= {lat: lat, long: lng};
+    alert('lat '+lat+'long '+long);
+      $.ajax({
+                             type: "POST",
+                             url: "ajax/localisation/etablissement", // call the php file ajax/tuto-autocomplete.php (check the routine we defined)
+                             data: data, // Send dataFields var
+                             dataType: 'json',
+                             timeout: 3000,
+                             success: function(response){
+                               $('#test').text('test');
+                             },
+                               error: function() { // if error
+                                     $('#test').text('Problem!');
+                             } // json method
+                             }); 
+  });
+   
+  }
+    </script>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+      var jour_ouverture={{jour_ouverture|json_encode|raw}};
+      var count=0;
+      $("input[type='checkbox']").each(function() {
+        var jour=$(this).attr('value');
+        var input = ($('#heure'+jour));
+        if (jour_ouverture[count]==true) {
+          $(this).prop('checked', true);
+        } else {
+          $("#"+jour).hide();
+        }
+        count++;
+        });
+       $("#joursOuverts").click(function() {
+      $("#jours").show();
+      $("#lundi").hide();
+      $("#mardi").hide();
+      $("#mercredi").hide();
+      $("#jeudi").hide();
+      $("#vendredi").hide();
+      $("#samedi").hide();
+      $("#dimanche").hide();
+        $("input[type='checkbox']:checked").each(
+          function() {
+           var jour=$(this).attr('value');
+           $("#"+jour).show();
+          });          
+       });
+    });
+
+    </script>
+    
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-ZoCVAWHAKhfRq_SYGOOZUYim7Vl_M9A &callback=initMap">
+    </script>
+{% endblock javascripts %}
+
+{% block ldsplatform_body %}
+
+      <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        width:100%;
+        height:625px;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+
+  <div class="container-fluid">
+      <a href="{{ path('lds_platform_detail', {'siret': etablissement.siret, 'id' : 2}) }}" class="btn btn-primary">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        Retour
+      </a>
+      <h3 class="text-center">Modifier l'établissement : {{etablissement.nomEtablissement}} </h3>
+
+
+      {{ form_start(form, {'attr': {'class': 'well col-xs-8 col-sm-8 col-md-6 col-lg-6 col-xs-offset-2 col-sm-offset-2 col-md-offset-3 col-lg-offset-3'}}) }}
+
+      {# Les erreurs générales du formulaire. #}
+      {{ form_errors(form) }}
+
+      <div class="row">
+        <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+          {{ form_row(form.nomEtablissement) }}
+          {{ form_row(form.ville) }}
+
+          {{ form_row(form.codePostal) }}
+          {{ form_row(form.adresse) }}
+
+          {{ form_row(form.description) }}
+        </div>
+
+        <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+
+          {{ form_row(form.telephone) }}
+          {{ form_row(form.joursOuverts, {'id': 'joursOuverts'}) }}
+ <div id="jours">
+  <div id="lundi">
+    {{ form_row(form.heureOuvertureLundi, {'id': 'heurelundi'}) }}
+    {{ form_row(form.heureFermetureLundi, {'class': 'lundi'}) }}
+  </div>
+  <div id="mardi">
+    {{ form_row(form.heureOuvertureMardi, {'id': 'heuremardi'}) }}
+    {{ form_row(form.heureFermetureMardi, {'class': 'mardi'}) }}
+  </div>
+  <div id="mercredi">
+    {{ form_row(form.heureOuvertureMercredi, {'id': 'heuremercredi'}) }}
+    {{ form_row(form.heureFermetureMercredi, {'class': 'mercredi'}) }}
+  </div>
+  <div id="jeudi">
+    {{ form_row(form.heureOuvertureJeudi, {'id': 'heurejeudi'}) }}
+    {{ form_row(form.heureFermetureJeudi, {'class': 'jeudi'}) }}
+  </div>
+  <div id="vendredi">
+    {{ form_row(form.heureOuvertureVendredi, {'id': 'heurevendredi'}) }}
+    {{ form_row(form.heureFermetureVendredi, {'class': 'vendredi'}) }}
+  </div>
+  <div id="samedi">
+    {{ form_row(form.heureOuvertureSamedi, {'id': 'heuresamedi'}) }}
+    {{ form_row(form.heureFermetureSamedi, {'class': 'samedi'}) }}
+  </div>
+  <div id="dimanche">
+    {{ form_row(form.heureOuvertureDimanche, {'id': 'heuredimanche'}) }}
+    {{ form_row(form.heureFermetureDimanche, {'class': 'dimanche'}) }}
+  </div>
+</div>
+  
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+
+          {{ form_row(form.tags) }}
+
+        </div>
+
+        <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+          {{ form_row(form.photo1) }}
+          {{ form_row(form.photo2) }}
+          {{ form_row(form.photo3) }}
+          {{ form_row(form.photo4) }}
+          {{ form_row(form.photo5) }}
+
+        </div>
+      </div>
+
+      <p><strong>Deplacez le marqueur pour localiser votre etablissement</strong></p>
+      <div id="map"></div>
+      {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+      <div class="text-center">
+        <br>
+        {{ form_widget(form.modifier, {'attr': {'class': 'btn btn-primary'}}) }}
+      </div>
+
+  {# Génération automatique des champs pas encore écrits.
+     Dans cet exemple, ce serait le champ CSRF (géré automatiquement par Symfony !)
+     et tous les champs cachés (type « hidden »). #}
+     {{ form_rest(form) }}
+
+     {# Fermeture de la balise <form> du formulaire HTML #}
+      {{ form_end(form) }}
+    </div>
+     
+{% endblock ldsplatform_body %}

@@ -1,0 +1,136 @@
+{% extends "LDSPlatformBundle::layout_admin.html.twig" %}
+
+{% block title %}
+Liste des établissements
+{% endblock %}
+
+{% block ldsplatform_body %}
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="{{ asset('js/autocomplete_ville.js')}}"></script>
+<script type="text/javascript" src="{{ asset('js/autocomplete_etablissement.js')}}"></script>
+
+<h3 class="text-center">Liste des particuliers</h3>
+<section class="container-fluid search">
+ <div class="container">
+  {{ form_start(form) }}
+
+  <div class="row">
+    <div class="col-lg-8">
+     {{ form_row(form.nomEtablissement, {'id': 'etablissement'}) }}
+     <div id="matchEtablissement"></div>
+   </div>
+   <div class="col-lg-4">
+     {{ form_row(form.ville, {'id': 'ville'}) }}
+     <div id="match"></div>
+   </div>
+ </div>
+
+ <div class="row">
+  <div class="col-lg-6 col-lg-offset-3">
+   {{ form_widget(form.chercher, {'attr': {'class': 'btn btn-custom btn-block'}}) }}
+ </div>
+</div>
+{{ form_rest(form) }}
+
+{{ form_end(form) }}
+
+</form>
+</div>
+</section>
+
+
+<div class="col-md-10 col-lg-8 col-md-offset-1 col-lg-offset-2">
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Nom</th>
+        <th>Propriétaire</th>
+        <th>Ville</th>
+        <th>Email</th>
+        <th>Tags</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% if listeEtablissement is empty %}
+      <div class="col-md-6 col-lg-6 col-lg-offset-3 text-center alert alert-info">
+        Aucun établissement
+      </div>
+      {% endif %}
+
+
+      {% set i = 0 %}
+      {% for etablissement in listeEtablissement %}
+
+      <tr>
+        <td><a href="{{ path('lds_platform_detail', {'siret': etablissement.siret, 'id' : 3}) }}">{{ etablissement.nomEtablissement }} </a></td>
+
+        <td>{{etablissement.proprietaire}}</td>
+        <td>{{etablissement.ville}}</td>
+        <td>{{etablissement.email}}</td>
+        <td>{% for tag in etablissement.tags %} 
+         {{ tag.nom }}
+       {% endfor %}</td>
+       
+       <td>
+        <a data-toggle="modal" href="#supprimer_etablissement{{i}}" class="btn btn-danger">
+          <span class="glyphicon glyphicon-trash"></span>
+          Supprimer
+        </a>
+
+        <div class="modal" id="supprimer_etablissement{{i}}">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">x</button>
+                <h4 class="modal-title">Voulez vous vraiment supprimer {{etablissement.nomEtablissement}} ?</h4>
+              </div>
+              <div class="modal-body">
+               <a href="{{ path('lds_platform_admin_supprimer_etablissement', {'siret': etablissement.siret}) }}" class="btn btn-success">Oui</a>
+               <button class="btn btn-info" data-dismiss="modal">Non</button>
+             </div>
+           </div>
+         </div>
+       </div>
+
+
+       {% set i = i + 1 %}
+       <td>
+         <tr>
+           {% endfor %}
+         </tbody>
+       </table>
+
+
+       <div class="text-center">
+            <ul class="pagination">
+          {% if listeEtablissement|length >4 %}
+                  {% if pagination.page>1 %}
+                      <li><a href="{{ path(pagination.route,
+            pagination.route_params|merge({'page': 1})) }}"><<</a></li>
+                        <li><a href="{{ path(pagination.route,
+              pagination.route_params|merge({'page': pagination.page-1})) }}"><</a></li>
+                      {% endif %}
+                      {% for p in range(max(pagination.page-4, 1),min(pagination.page+4, pagination.pages_count)) %}
+                          <li {% if p == pagination.page %} class="active"{% endif %}><a href="{{ path(pagination.route,
+                pagination.route_params|merge({'page': p})) }}">{{ p }}</a></li>
+                        {% endfor %}
+                        {% if pagination.page<pagination.pages_count %}
+                            <li><a href="{{ path(pagination.route,
+                  pagination.route_params|merge({'page': pagination.page+1})) }}">></a></li>
+                              <li><a href="{{ path(pagination.route,
+                    pagination.route_params|merge({'page': pagination.pages_count})) }}">>></a></li>
+                            {% endif %}
+                    {% endif %}
+                      </ul>
+                </div>
+              </div>
+
+
+
+
+
+              {% endblock %}
+

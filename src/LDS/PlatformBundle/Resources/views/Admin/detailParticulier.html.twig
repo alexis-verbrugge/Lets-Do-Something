@@ -1,0 +1,98 @@
+{% extends "LDSPlatformBundle::layout_admin.html.twig" %}
+
+
+{% block title %}
+Detail de {{particulier.login}}
+{% endblock %}
+
+{% block ldsplatform_body %}
+<div class="container">
+  <h3 class="text-center">Profil de {{particulier.login}}</h3>
+
+
+  <div class="col-md-5 col-lg-5 panel-group">
+    <div class="panel panel-info">
+      <div class="panel-heading text-center"><span class="glyphicon glyphicon-info-sign"></span> Informations</div>
+      <div class="panel-body">
+        <div class="col-lg-7">
+          <p>
+            <strong>Pseudo</strong> : {{particulier.login}}<br><br>
+            <strong>Prénom</strong> : {{particulier.prenom}}<br>
+            <strong>Nom</strong> : {{particulier.nom}}<br>
+            <strong>E-mail</strong> : {{particulier.email}}<br>
+            <strong>Téléphone</strong> : {{particulier.telephone}}<br>
+            <strong>Ville</strong> : {{particulier.ville}}<br>
+            <strong>Sexe</strong> : {{particulier.sexe}}<br><br>
+          </p>
+        </div>
+
+        <div class="col-lg-3">
+          {% if particulier.avatar != "" %}
+          <img src="{{ asset('uploads/avatar/' ~ particulier.avatar) }} "width="100px" height="100px">
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-md-7 col-lg-7 panel-group">
+    <div class="panel panel-primary">
+      <div class="panel-heading text-center"><span class="glyphicon glyphicon-comment"></span> Commentaires postés</div>
+      <div class="panel-body">      
+
+         {% if listeCommentaire is empty %}
+            <div class="col-md-6 col-lg-6 col-lg-offset-3 text-center alert alert-info">
+              Aucun commentaire
+            </div>
+            {% endif %}
+
+        {% for commentaire in listeCommentaire %}
+
+        <div class="col-md-12 col-lg-12 panel-group">
+          <div class="panel panel-default">
+            <div class="panel-heading text-center">{{commentaire.etablissement.nomEtablissement}}</div>
+            <div class="panel-body">
+              <p> 
+                <strong>Etablissement</strong> : {{commentaire.etablissement.nomEtablissement}}<br><br>
+
+                <strong>Note</strong> : {{commentaire.note}}/5<br>
+                <strong>Commentaire</strong> : <br>
+                "{{commentaire.commentaire}}"
+              </p>
+
+              <div class="text-center">
+        
+            
+            <a data-toggle="modal" href="#enlever_commentaire"  class="btn btn-danger">
+                           <span class="glyphicon glyphicon-trash"></span>
+                             Supprimer ce commentaire 
+                          </a>
+                           <div class="modal" id="enlever_commentaire" >
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">x</button>
+                              <h4 class="modal-title">Voulez vous vraiment enlever ce commentaire ?</h4>
+                            </div>
+                            <div class="modal-body">
+                             <a href="{{ path('lds_platform_supprimer_commntaire', {'id': commentaire.id, 'redirection': 1}) }}" class="btn btn-success">Oui</a>
+                             <button class="btn btn-info" data-dismiss="modal">Non</button>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+                     </div>
+
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+
+
+  {% endblock ldsplatform_body %}

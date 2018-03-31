@@ -1,0 +1,187 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %}
+
+
+{% block ldsplatform_body %}
+   <script>
+  var lati = {{lati|json_encode|raw}};
+  var lngi = {{lngi|json_encode|raw}};
+  var maLat = {{app.session.get("ma_lat")|json_encode|raw}};
+  var maLong = {{app.session.get("ma_long")|json_encode|raw}};
+  var id = {{id_event|json_encode()}};
+  var choix_manuel = {{choix_manuel|json_encode()}};
+  var date_debut = {{date_debut|json_encode|raw}};
+  var descriptions = {{description|json_encode|raw}};
+  var noms = {{nom|json_encode|raw}};
+  var photos = {{photos|json_encode|raw}};
+
+  console.log(lati);
+  console.log(maLat);
+
+         function initMap() {
+     var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 9,
+          center: {lat: maLat, lng: maLong}
+        });
+         var infoWindow = new google.maps.InfoWindow({map: map});
+        // Try HTML5 geolocation.
+        if (choix_manuel==false) {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+        marker = new google.maps.Marker({
+              map: map,
+         draggable: false,
+         animation: google.maps.Animation.DROP,
+         position: pos
+        });
+            infoWindow.setPosition(pos);
+            infoWindow.setContent('Location found.');
+            map.setCenter(pos);
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        }
+} else {
+         marker = new google.maps.Marker({
+              map: map,
+         draggable: false,
+         animation: google.maps.Animation.DROP,
+         position: {lat: maLat, lng: maLong}
+        });
+       }
+
+    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        var markers = locations.map(function(location, i) {
+          mark = new  google.maps.Marker({
+            position: location,
+            label: labels[i % labels.length],
+          });
+          return mark;
+        });
+
+        var count=0;
+        var tmp=0;
+        {% set i = 0 %}
+
+    markers.forEach( (m) => {
+     tmp=id[count];
+
+      var url = "{{ path('lds_platform_evenement_detail', {'id': 'id', 'id2': 1}) }}";          
+      url = url.replace('id', tmp);
+      var asset="{{ asset('uploads/avatar/' ) }}";
+      var img = "<img src='"+asset+photos[count]+"' width='100' height='100'>";
+      var contentString = img+"<a href="+url+">"+noms[count] +"</a><br>"+descriptions[count]+"<br> debut le "+date_debut[count];
+      count++;
+      
+      console.log(contentString);
+      
+       var infowindow = new google.maps.InfoWindow({
+          content: contentString
+        });
+        m.addListener("click", function() {
+          infowindow.open(map, m);
+        });
+        
+     });
+
+        // Add a marker clusterer to manage the markers.
+        var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+      }
+    
+     var locations = [];
+
+    for(var i=0; i<lati.length; i++){
+      var coor = {lat: parseFloat(lati[i]), lng: parseFloat(lngi[i])};
+      locations.push(coor);
+    }
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+      }
+    </script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-ZoCVAWHAKhfRq_SYGOOZUYim7Vl_M9A &callback=initMap">
+    </script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+  <script type="text/javascript" src="{{ asset('js/autocomplete_ville.js')}}"></script>
+  
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+  <title>Marker Clustering</title>
+  <style>
+      /* Always set the map height explicitly to define the size of the div
+      * element that contains the map. */
+      #map {
+       margin-top: 60px;
+       width:100%;
+       height:625px;
+     }
+     /* Optional: Makes the sample page fill the window. */
+     html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    </style>
+  </head>
+  <body>
+
+ 
+   <div class="container-fluid">
+    <h3 class="text-center">Rechercher un événement</h3>
+    <div class="col-xs-2 col-md-2 col-sm-2 col-lg-2 col-xs-offset-1 col-md-offset-1 col-sm-offset-1 col-lg-offset-1">
+      <a href="{{ path('lds_platform_trouver_evenement', {'id': 1, 'page' :1 }) }}" class="btn btn-primary">
+        <i class="glyphicon glyphicon-search"></i>
+        Liste
+      </a> <br><br>
+
+      <div class="well">
+       {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+       {# Les erreurs générales du formulaire. #}
+       {{ form_errors(form) }}
+
+       {# Génération du label + error + widget pour un champ. #}
+       {{ form_row(form.tags) }}
+
+       {{ form_row(form.codePostal) }}
+          {% if listeErreurs["ville_multiple"] is defined %}
+       <p class="alert alert-danger"> {{ listeErreurs["ville_multiple"] }}</p>
+        {% endif %}
+
+        {% if listeErreurs["erreur_ville"] is defined %}
+       <p class="alert alert-danger"> {{ listeErreurs["erreur_ville"] }}</p>
+        {% endif %}
+
+       {{ form_row(form.ville, {'id': 'ville'}) }}
+       <div id="match"></div>
+       {{ form_row(form.distance) }}
+       <div class="text-center">
+         {{ form_widget(form.chercher, {'attr': {'class': 'btn btn-primary'}}) }}
+       </div>
+       {{ form_rest(form) }}
+
+       {# Fermeture de la balise <form> du formulaire HTML #}
+        {{ form_end(form) }}
+      </div>
+    </div>
+     {% if listeErreurs["pas_evenement"] is defined %}
+       <p class="alert alert-danger"> {{ listeErreurs["pas_evenement"] }}</p>
+        {% endif %}
+    <div class="col-xs-9 col-sm-9 col-sm-9 col-lg-9">
+       <div id="map"></div> 
+    </div>
+
+{% endblock %}

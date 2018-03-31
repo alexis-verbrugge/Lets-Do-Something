@@ -1,0 +1,55 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %} 
+
+{% block title %}
+Vos fiches soirées
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<div class="container">
+
+
+	<h3 class="text-center">Vos fiches soirées</h3>
+
+
+	
+
+	<div class="col-sm-6 col-md-6 col-lg-6">
+		<div class="panel panel-success">
+			<div class="panel-heading text-center"><span class="glyphicon glyphicon-ok-sign"></span> Je participe</div>
+			<div class="panel-body text-center">
+				{% if listeParticipe is empty %}
+				<div class="alert alert-info text-center">
+					Vous ne participez à aucune soirée
+				</div>
+				{% endif %}
+
+				{% for soiree in listeParticipe %}
+
+				<a href="{{ path('lds_platform_particulier_detail_fiche_soiree', {'id': soiree.id}) }}"><h4>{{ soiree.nom }}</h4> </a>
+
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-6 col-md-6 col-lg-6">
+		<div class="panel panel-warning">
+			<div class="panel-heading text-center"><span class="glyphicon glyphicon-cog"></span> J'organise</div>
+			<div class="panel-body text-center">
+				{% if listeAdmin is empty %}
+				<div class="alert alert-info text-center">
+					Vous n'organisez aucune soirée
+				</div>
+				{% endif %}				
+
+				{% for soiree in listeAdmin %}
+				<a href="{{ path('lds_platform_particulier_detail_fiche_soiree', {'id': soiree.id}) }}"><h4>{{ soiree.nom }}</h4> </a>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	
+
+	{% endblock ldsplatform_body %}

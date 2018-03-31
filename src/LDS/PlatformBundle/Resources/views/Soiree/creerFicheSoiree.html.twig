@@ -1,0 +1,44 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %} 
+
+{% block title %}
+Créer une fiche soirée
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<div class="container-fluid">
+	<h3 class="text-center">Créer une fiche soirée</h3>
+
+  {{ form_start(form, {'attr': {'class': 'well col-xs-8 col-sm-8 col-md-8 col-lg-4 col-xs-offset-2 col-sm-offset-2 col-md-offset-2 col-lg-offset-4'}}) }}
+
+	{# Les erreurs générales du formulaire. #}
+	{{ form_errors(form) }}
+
+	<div class="row">
+
+		<div class="col-xs-12 col-md-8 col-sm-8 col-lg-8 col-sm-offset-2 col-md-offset-2 col-lg-offset-2">
+			{# Génération du label + error + widget pour un champ. #}
+			{{ form_row(form.nom) }}
+
+			{{ form_row(form.description) }}
+
+			{{ form_row(form.date) }}
+
+			{{ form_row(form.heure_debut) }}
+			{{ form_row(form.heure_fin) }}
+
+			<div class="text-center">
+				{{ form_widget(form.creer, {'attr': {'class': 'btn btn-primary'}}) }}
+			</div>
+
+
+			{{ form_rest(form) }}
+
+			{# Fermeture de la balise <form> du formulaire HTML #}
+				{{ form_end(form) }}
+
+			</div>
+
+		</div>
+
+		{% endblock ldsplatform_body %}

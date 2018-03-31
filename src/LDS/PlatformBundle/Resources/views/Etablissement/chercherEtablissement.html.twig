@@ -1,0 +1,139 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %} 
+{% block title %}
+Rechercher établissement
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="{{ asset('js/autocomplete_ville.js')}}"></script>
+
+<div class="container">
+	<h3 class="text-center">Rechercher un établissement</h3>
+
+
+	<div class="col-xs-8 col-sm-8 col-md-2 col-lg-2 col-xs-offset-2 col-sm-offset-2 col-md-offset-0 col-lg-offset-0">
+		<a href="{{ path('lds_platform_trouver_etablissement', {'id': 2, 'page' : 1}) }}" class="btn btn-primary">
+			<span class="glyphicon glyphicon-search"></span>
+			Carte
+		</a> <br><br>
+		<div class="well">
+			{{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
+
+			{# Les erreurs générales du formulaire. #}
+
+			{{ form_errors(form) }}
+
+			<div class="row">
+				{# Génération du label + error + widget pour un champ. #}
+				<div class="col-xs-10 col-sm-4 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+					{{ form_row(form.tags) }}
+				</div>
+
+				<div class="col-xs-10 col-sm-4 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+					{{ form_row(form.codePostal) }}
+					{{ form_row(form.ville, {'id': 'ville'}) }}
+					{% if listeErreurs["ville_multiple"] is defined %}
+					<p class="alert alert-danger"> {{ listeErreurs["ville_multiple"] }}</p>
+					{% endif %}
+					{% if listeErreurs["erreur_ville"] is defined %}
+					<p class="alert alert-danger"> {{ listeErreurs["erreur_ville"] }}</p>
+					{% endif %}
+				</div>
+			</div>  
+			<div id="match"> </div>
+
+
+
+
+			<div class="row">
+				<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+					{{ form_row(form.distance) }}
+					<p class="text-center">à moins de <strong><output name="res" style="display: inline;">50</output></strong> km</p>
+				</div>
+			</div>
+
+			<div class="text-center">
+				{{ form_widget(form.chercher, {'attr': {'class': 'btn btn-primary'}}) }}
+
+			</div>
+
+
+
+
+
+			{{ form_rest(form) }}
+		</div>
+		{# Fermeture de la balise <form> du formulaire HTML #}
+			{{ form_end(form) }}
+		</div>
+
+
+
+
+
+
+		<div class="col-xs-10 col-md-10 col-sm-10 col-lg-10">
+			<div class="text-center">
+				    <ul class="pagination">
+					{% if count > 6 %}
+					        {% if pagination.page>1 %}
+					            <li><a href="{{ path(pagination.route,
+						pagination.route_params|merge({'page': 1})) }}"></a></li>
+						            <li><a href="{{ path(pagination.route,
+							pagination.route_params|merge({'page': pagination.page-1})) }}"></a></li>
+							        {% endif %}
+							        {% for p in range(max(pagination.page-4, 1),min(pagination.page+4, pagination.pages_count)) %}
+							            <li {% if p == pagination.page %} class="active"{% endif %}><a href="{{ path(pagination.route,
+								pagination.route_params|merge({'page': p})) }}">{{ p }}</a></li>
+								        {% endfor %}
+								        {% if pagination.page<pagination.pages_count %}
+								            <li><a href="{{ path(pagination.route,
+									pagination.route_params|merge({'page': pagination.page+1})) }}">></a></li>
+									            <li><a href="{{ path(pagination.route,
+										pagination.route_params|merge({'page': pagination.pages_count})) }}">>></a></li>
+										        {% endif %}
+										{% endif %}
+
+									    </ul>
+								</div>
+							</div>
+
+							{% if listeErreurs["pas_etablissement"] is defined %}
+							<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 col-xs-offset-2 col-sm-offset-2 col-md-offset-1 col-lg-offset-1">
+								<p class="alert alert-info text-center"> {{ listeErreurs["pas_etablissement"] }}</p>
+							</div>
+							{% endif %}
+							<div class="col-xs-8 col-sm-8 col-md-10 col-lg-10 col-xs-offset-2 col-sm-offset-2 col-md-offset-0 col-lg-offset-0  ">
+								{% for etablissement in listeEtablissement %}
+								<div class="col-xs-12 col-sm-12 col-md-5 col-lg-5 panel-group">
+									<div style="height: 300px;"  class="panel panel-default">
+										<div class="panel-heading text-center"><a  href="{{ path('lds_platform_detail', {'siret': etablissement.siret, 'id' : 1}) }}"><h4>{{ etablissement.nomEtablissement }}</h4></a></div>
+										<div class="panel-body">
+											{% if etablissement.photo1 != "" %}
+											<img src="{{ asset('uploads/avatar/' ~ etablissement.photo1) }} "width="50px" height="50px"><br><br>
+											{% endif %} 
+
+
+											<strong>{{ etablissement.ville }}</strong> <i> {{etablissement.codePostal}}  (à {{etablissement.distance}} km) </i>
+
+
+
+
+											<div class="well">
+												{{ etablissement.description|length > 150 ? etablissement.description|slice(0, 150) ~ '...' : etablissement.description }}
+											</div>
+										</div>
+									</div>
+								</div>
+								{% endfor %}
+							</div>
+						</div>
+
+
+
+
+					</div>
+				</div>
+
+				{% endblock ldsplatform_body %}

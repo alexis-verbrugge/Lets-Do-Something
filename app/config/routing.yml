@@ -1,0 +1,5 @@
+# app/config/routing.yml
+
+lds_platform:
+    resource: "@LDSPlatformBundle/Resources/config/routing.yml"
+    prefix:   /platform

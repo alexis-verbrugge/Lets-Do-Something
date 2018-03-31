@@ -1,0 +1,42 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %} 
+
+{% block title %}
+Vos établissements favoris
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<div class="container">
+	<h3 class="text-center">Vos établissements favoris</h3>
+
+	{% if listeFavori is empty %}
+	<div class="text-center alert alert-info">
+		Vous n'avez pas d'établissement favori
+	</div>
+	{% endif %}
+
+	{% for etablissement in listeFavori %}
+	<div class="col-lg-4">
+		<div class="panel panel-default">
+			<div class="panel-heading text-center"><a  href="{{ path('lds_platform_detail', {'siret': etablissement.siret, 'id' : 1}) }}"><h4>{{ etablissement.nomEtablissement }}</h4></a></div>
+			<div class="panel-body">
+				<p>
+					{% if etablissement.photo1 != "" %}
+					<img src="{{ asset('uploads/avatar/' ~ etablissement.photo1) }} "width="50px" height="50px"><br><br>
+					{% endif %}
+				</p>
+
+				<strong>{{ etablissement.ville }}</strong> <i> {{etablissement.codePostal}} </i>
+
+
+
+
+			</div>
+		</div>
+	</div>
+
+	{% endfor %}
+
+</div>
+
+{% endblock ldsplatform_body %}

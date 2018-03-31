@@ -1,0 +1,221 @@
+{% extends id==3 ? "LDSPlatformBundle::layout_admin.html.twig" : "LDSPlatformBundle::layout.html.twig"  %}
+
+
+{% block title %}
+  Inscription professionnel
+{% endblock %}
+
+{% block ldsplatform_body %}
+<style>
+      #map {
+        width:100%;
+        height:625px;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      </style>
+      <script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="{{ asset('js/autocomplete_ville.js')}}"></script>
+<script>
+
+function initMap() {
+  var lati = {{lat|json_encode()}};
+  var long = {{long|json_encode()}};
+  var data;
+
+  var carte = new google.maps.Map(document.getElementById('map'), {
+    zoom: 15,
+    center: {lat: lati, lng: long}
+  });
+
+  marq = new google.maps.Marker({
+      position: {lat: lati, lng: long},//coordonnÈe de la position du clic sur la carte
+      map: carte//la carte sur laquelle le marqueur doit Ítre affichÈ
+    });
+  marq.setDraggable(true);
+
+  google.maps.event.addListener(marq, 'dragend', function(event) {
+    var lat = marq.getPosition().lat();
+    var lng = marq.getPosition().lng();
+    data= {lat: lat, long: lng};
+    alert('lat '+lat+'long '+long);
+    $.ajax({
+     type: "POST",
+                             url: "ajax/localisation/etablissement", 
+                             data: data, 
+                             dataType: 'json',
+                             timeout: 3000,
+                             success: function(response){
+                               $('#test').text('test');
+                             },
+                               error: function() { 
+                                 $('#test').text('Problem!');
+                             } 
+                           }); 
+  });
+
+}
+</script>
+
+<script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+</script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC-ZoCVAWHAKhfRq_SYGOOZUYim7Vl_M9A &callback=initMap">
+</script>
+
+ <script type="text/javascript">
+    $(document).ready(function() {
+       $("#jours").hide();
+      
+       $("#joursOuverts").click(function() {
+      $("#jours").show();
+      $("#lundi").hide();
+      $("#mardi").hide();
+      $("#mercredi").hide();
+      $("#jeudi").hide();
+      $("#vendredi").hide();
+      $("#samedi").hide();
+      $("#dimanche").hide();
+        $("input[type='checkbox']:checked").each(
+          function() {
+           var jour=$(this).attr('value');
+           $("#"+jour).show();
+          });          
+       });
+    });
+
+    </script>
+
+    <div class="container-fluid">
+
+      <h3 class="text-center">Ajouter un etablissement</h3>
+      {% if id==1 %}
+      <a href="{{ path('lds_platform_inscription_professionnel', {'id': 2}) }}" class="btn btn-primary">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Retour
+      </a><br>
+    {% endif %}
+    {% if id==2 %}
+      <a href="{{ path('lds_platform_pro_liste_etablissement') }}" class="btn btn-primary">
+        <i class="glyphicon glyphicon-chevron-left"></i>
+        Retour
+      </a><br>
+    {% endif %}
+      {{ form_start(form, {'attr': {'class': 'well col-xs-8 col-sm-8 col-md-6 col-lg-6 col-xs-offset-2 col-sm-offset-2 col-md-offset-3 col-lg-offset-3'}}) }}
+
+      {# Les erreurs g√©n√©rales du formulaire. #}
+      {{ form_errors(form) }}
+
+      <div class="row">
+
+       <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+        {# G√©n√©ration du label + error + widget pour un champ. #}
+        {{ form_row(form.siret) }}
+
+        {% if listeErreurs["erreur_siret"] is defined %}
+        <p class="alert alert-danger"> {{ listeErreurs["erreur_siret"] }}</p>
+        {% endif %}
+
+        {{ form_errors(form.siret) }}
+        {{ form_row(form.nomEtablissement) }}
+      
+        {{ form_row(form.ville, {'id': 'ville'}) }}
+        {{ form_row(form.codePostal, {'id': 'codePostal'}) }}
+        {{ form_row(form.adresse) }}
+        {% if listeErreurs["erreur_ville"] is defined %}
+        <p class="alert alert-danger"> {{ listeErreurs["erreur_ville"] }}</p>
+        {% endif %}
+        <div id="match"></div>
+
+      </div>
+
+      <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+
+
+        {{ form_row(form.telephone) }}
+
+         {{ form_row(form.joursOuverts, {'id': 'joursOuverts'}) }}
+  <div id="jours">
+  <div id="lundi">
+    {{ form_row(form.heureOuvertureLundi, {'class': 'lundi'}) }}
+    {{ form_row(form.heureFermetureLundi, {'class': 'lundi'}) }}
+  </div>
+  <div id="mardi">
+    {{ form_row(form.heureOuvertureMardi, {'class': 'mardi'}) }}
+    {{ form_row(form.heureFermetureMardi, {'class': 'mardi'}) }}
+  </div>
+  <div id="mercredi">
+    {{ form_row(form.heureOuvertureMercredi, {'class': 'mercredi'}) }}
+    {{ form_row(form.heureFermetureMercredi, {'class': 'mercredi'}) }}
+  </div>
+  <div id="jeudi">
+    {{ form_row(form.heureOuvertureJeudi, {'class': 'jeudi'}) }}
+    {{ form_row(form.heureFermetureJeudi, {'class': 'jeudi'}) }}
+  </div>
+  <div id="vendredi">
+    {{ form_row(form.heureOuvertureVendredi, {'class': 'vendredi'}) }}
+    {{ form_row(form.heureFermetureVendredi, {'class': 'vendredi'}) }}
+  </div>
+  <div id="samedi">
+    {{ form_row(form.heureOuvertureSamedi, {'class': 'samedi'}) }}
+    {{ form_row(form.heureFermetureSamedi, {'class': 'samedi'}) }}
+  </div>
+  <div id="dimanche">
+    {{ form_row(form.heureOuvertureDimanche, {'class': 'dimache'}) }}
+    {{ form_row(form.heureFermetureDimanche, {'class': 'dimanche'}) }}
+  </div>
+</div>
+
+        {{ form_row(form.description) }}
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+
+        {{ form_row(form.tags) }}
+      </div>
+
+      <div class="col-xs-12 col-md-4 col-sm-4 col-lg-4 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+        {{ form_row(form.photo1) }}
+        {{ form_row(form.photo2) }}
+        {{ form_row(form.photo3) }}
+        {{ form_row(form.photo4) }}
+        {{ form_row(form.photo5) }}
+
+      </div>
+    </div>
+    <p><strong>Deplacez le marqueur pour localiser votre etablissement</strong></p>
+    <div id="test"></div>
+    <div id="map"></div> 
+
+    {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+    <div class="row">
+      <div class="text-center">
+        <br>
+        {{ form_widget(form.inscription, {'attr': {'class': 'btn btn-primary'}}) }}
+      </div>
+    </div>
+
+
+    {% if listeErreurs["deja_demande"] is defined %}
+    <p class="alert alert-danger"> {{ listeErreurs["deja_demande"] }}</p>
+    {% endif %} <br>
+
+    {% if listeErreurs["spam_etablissement"] is defined %}
+    <p class="alert alert-danger"> {{ listeErreurs["spam_etablissement"] }}</p>
+    {% endif %}
+    {{ form_rest(form) }}
+      {{ form_end(form) }}
+
+    </div>
+
+
+
+
+
+    {% endblock ldsplatform_body %}

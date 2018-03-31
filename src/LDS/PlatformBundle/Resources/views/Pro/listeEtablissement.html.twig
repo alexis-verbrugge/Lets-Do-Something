@@ -1,0 +1,121 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %}
+
+
+{% block title %}
+Vos établissements
+{% endblock %}
+
+{% block ldsplatform_body %}
+<div class="container">
+
+
+  <h3 class="text-center">Vos établissements</h3>
+  <div class="row text-center">
+    <a href="{{ path('lds_platform_inscription_etablissement', {'id': 2, 'id2': 1}) }}" class="btn btn-primary">
+      <i class="glyphicon glyphicon-plus"></i>
+      Ajouter un établissement
+    </a><br><br>
+  </div>
+
+
+  <div class="col-sm-6 col-md-6 col-lg-6">
+   <div class="panel panel-success">
+    <div class="panel-heading text-center"><span class="glyphicon glyphicon-ok-sign"></span> Validés</div>
+    <div class="panel-body">
+      {% set i = 0 %}
+      {% if listeEtablissementValide is empty %}
+      <div class="alert alert-info text-center">
+        Aucun établissement
+      </div>
+      {% endif %}
+      {% for etablissement in listeEtablissementValide %}
+      <div class="panel panel-default">
+        <div class="panel-heading text-center"><h4><img src="{{ asset('uploads/avatar/' ~ etablissement.photo1) }} "width="50px" height="50px">{{ etablissement.nomEtablissement }}</h4> </div>
+        <div class="panel-body">
+
+
+          <strong>Siret</strong> : {{ etablissement.siret}} <br>
+          <strong>Ville</strong> : {{ etablissement.ville }} <br>
+          <strong>Code Postal</strong> : {{etablissement.codePostal}}<br>
+          <strong>Email</strong> {{etablissement.email}} <br>
+          <span class="glyphicon glyphicon-earphone"></span> {{etablissement.telephone}} <br>
+          <strong>Description</strong> : {{etablissement.description}} <br>
+
+          <div class="text-center">
+            <a href="{{ path('lds_platform_detail', {'siret': etablissement.siret, 'id' : 2}) }}" class="btn btn-primary">
+              <i class="glyphicon glyphicon-search"></i>
+              Détails
+            </a>
+
+
+            <a data-toggle="modal" href="#supprimer_etablissement{{i}}" class="btn btn-danger">
+              <i class="glyphicon glyphicon-trash"></i>
+              Supprimer
+            </a> 
+          </div>
+          <div class="modal" id="supprimer_etablissement{{i}}">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">x</button>
+                  <h4 class="modal-title">Voulez vous vraiment supprimer {{etablissement.nomEtablissement}} ?</h4>
+                </div>
+                <div class="modal-body">
+                 <a href="{{ path('lds_platform_pro_supprimer_etablissement', {'siret': etablissement.siret}) }}" class="btn btn-success">Oui</a>
+                 <button class="btn btn-info" data-dismiss="modal">Non</button>
+               </div>
+             </div>
+           </div>
+         </div>
+
+         {% set i = i + 1 %}
+       </div>
+     </div>
+     {% endfor %}
+   </div>
+ </div>
+</div>
+
+<div class="col-sm-6 col-md-6 col-lg-6">
+ <div class="panel panel-warning">
+  <div class="panel-heading text-center"><span class="glyphicon glyphicon-question-sign"></span> En attente de validation</div>
+  <div class="panel-body">
+    {% if listeEtablissementNonValide|length == 0 %}
+    <div class="alert alert-info text-center">
+      Aucun établissement en attente de validation
+    </div>
+    {% endif %}
+    {% for etablissement in listeEtablissementNonValide %}
+    <div class="panel panel-default">
+      <div class="panel-heading text-center"><h4><img src="{{ asset('uploads/avatar/' ~ etablissement.photo1) }} "width="50px" height="50px">{{ etablissement.nomEtablissement }}</h4> </div>
+      <div class="panel-body">
+
+       <strong>Siret</strong> : {{ etablissement.siret}} <br>
+       <strong>Ville</strong> : {{ etablissement.ville }} <br>
+       <strong>Code Postal</strong> : {{etablissement.codePostal}}<br>
+       <strong>Email</strong> {{etablissement.email}} <br>
+       <span class="glyphicon glyphicon-earphone"></span> {{etablissement.telephone}} <br>
+       <strong>Description</strong> : {{etablissement.description}} <br>
+
+       <div class="text-center">
+        <a href="{{ path('lds_platform_detail', {'siret': etablissement.siret, 'id' : 2}) }}" class="btn btn-primary">
+          <i class="glyphicon glyphicon-search"></i>
+          Détails
+        </a>
+
+        <a href="{{ path('lds_platform_pro_supprimer_etablissement', {'siret': etablissement.siret}) }}" class="btn btn-danger">
+          <i class="glyphicon glyphicon-trash"></i>
+          Supprimer
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+</div>
+
+
+
+</div>
+
+{% endblock ldsplatform_body %}

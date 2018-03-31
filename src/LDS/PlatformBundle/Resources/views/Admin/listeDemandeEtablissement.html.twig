@@ -1,0 +1,195 @@
+{% extends "LDSPlatformBundle::layout_admin.html.twig" %}
+
+
+{% block title %}
+Demandes d'établissements
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<div class="container">
+
+  <div class="text-center">
+        <ul class="pagination">
+      {% if count>4 %}
+              {% if pagination.page>1 %}
+                  <li><a href="{{ path(pagination.route,
+        pagination.route_params|merge({'page': 1})) }}"><<</a></li>
+                    <li><a href="{{ path(pagination.route,
+          pagination.route_params|merge({'page': pagination.page-1})) }}"><</a></li>
+                  {% endif %}
+                  {% for p in range(max(pagination.page-4, 1),min(pagination.page+4, pagination.pages_count)) %}
+                      <li {% if p == pagination.page %} class="active"{% endif %}><a href="{{ path(pagination.route,
+            pagination.route_params|merge({'page': p})) }}">{{ p }}</a></li>
+                    {% endfor %}
+                    {% if pagination.page<pagination.pages_count %}
+                        <li><a href="{{ path(pagination.route,
+              pagination.route_params|merge({'page': pagination.page+1})) }}">></a></li>
+                          <li><a href="{{ path(pagination.route,
+                pagination.route_params|merge({'page': pagination.pages_count})) }}">>></a></li>
+                        {% endif %}
+                {% endif %}
+                  </ul>
+            </div>
+            
+
+            <h3 class="text-center">Demandes d'établissements</h3>
+
+           {% if listeEtablissement is empty %}
+            <div class="col-md-6 col-lg-6 col-lg-offset-3 text-center alert alert-info">
+              Aucune demande d'établissement
+            </div>
+            {% endif %}
+
+            {% set i = 0 %}
+            {% for etablissement in listeEtablissement %}
+
+            <div class="panel-group col-md-6 col-lg-6">
+              <div class="panel panel-default">
+                <div class="text-center panel-heading"><h5>{{etablissement.nomEtablissement}}</h5></div>
+                <div class="panel-body">
+
+                  <p>
+                    <strong>Nom</strong> : {{ etablissement.nomEtablissement }} <br>
+                    <strong>Siret</strong> : {{ etablissement.siret}} <br>
+                    <strong>Ville</strong> : {{ etablissement.ville }} <br>
+                    <strong>Code Postal</strong> : {{etablissement.codePostal}}<br>
+                    <strong>Proprietaire</strong> : {{etablissement.proprietaire}} <br>
+                    <strong>E-mail</strong> : {{etablissement.email}} <br>
+                    <strong>telephone</strong> : {{etablissement.telephone}} <br>
+                    <strong>Description</strong> : {{etablissement.description}} <br>
+                    <strong>Horaires</strong> :<br>
+                    <strong>Lundi</strong> :
+                    {% if etablissement.heureOuvertureLundi == "" %}
+                    Fermé
+                    {% else %}
+                    {{etablissement.heureOuvertureLundi|date('H') }}H{{etablissement.heureOuvertureLundi|date('i') }} à {{etablissement.heureFermetureLundi|date('H') }}H{{etablissement.heureFermetureLundi|date('i') }}<br>
+                    {% endif %}
+
+                    <strong>Mardi</strong> :
+                    {% if etablissement.heureOuvertureMardi == null %}
+                    <strong>Fermé</strong><br>
+                    {% else %}
+                    {{etablissement.heureOuvertureMardi|date('H') }}H{{etablissement.heureOuvertureMardi|date('i') }} à {{etablissement.heureFermetureMardi|date('H') }}H{{etablissement.heureFermetureMardi|date('i') }}<br>
+                    {% endif %}             
+
+                    <strong>Mercredi</strong> :
+                    {% if etablissement.heureOuvertureMercredi == null %}
+                    <strong>Fermé</strong><br>
+                    {% else %}
+                    {{etablissement.heureOuvertureMercredi|date('H') }}H{{etablissement.heureOuvertureMercredi|date('i') }} à {{etablissement.heureFermetureMercredi|date('H') }}H{{etablissement.heureFermetureMercredi|date('i') }}<br>
+                    {% endif %}
+
+                    <strong>Jeudi</strong> :
+                    {% if etablissement.heureOuvertureJeudi == null %}
+                    <strong>Fermé</strong><br>
+                    {% else %}
+                    {{etablissement.heureOuvertureJeudi|date('H') }}H{{etablissement.heureOuvertureJeudi|date('i') }} à {{etablissement.heureFermetureJeudi|date('H') }}H{{etablissement.heureFermetureJeudi|date('i') }}<br>
+                    {% endif %}
+
+                    <strong>Vendredi</strong> :
+                    {% if etablissement.heureOuvertureVendredi == null %}
+                    <strong>Fermé</strong><br>
+                    {% else %}
+                    {{etablissement.heureOuvertureVendredi|date('H') }}H{{etablissement.heureOuvertureVendredi|date('i') }} à {{etablissement.heureFermetureVendredi|date('H') }}H{{etablissement.heureFermetureVendredi|date('i') }}<br>
+                    {% endif %}
+
+                    <strong>Samedi</strong> :
+                    {% if etablissement.heureOuvertureSamedi == null %}
+                    <strong>Fermé</strong><br>
+                    {% else %}
+                    {{etablissement.heureOuvertureSamedi|date('H') }}H{{etablissement.heureOuvertureSamedi|date('i') }} à {{etablissement.heureFermetureSamedi|date('H') }}H{{etablissement.heureFermetureSamedi|date('i') }}<br>
+                    {% endif %}
+
+                    <strong>Dimanche</strong> :  
+                    {% if etablissement.heureOuvertureDimanche == null %}
+                    <strong>Fermé</strong><br>
+                    {% else %}
+                    {{etablissement.heureOuvertureDimanche|date('H') }}H{{etablissement.heureOuvertureDimanche|date('i') }} à {{etablissement.heureFermetureDimanche|date('H') }}H{{etablissement.heureFermetureDimanche|date('i') }}<br>
+                    {% endif %}   
+                    <strong>Tags</strong> : {% for tag in etablissement.tags %} 
+                    {{ tag.nom ~ " " }}
+                    {% endfor %}
+                  </p>
+
+
+                  <div class="col-md-12 col-lg-12">
+                    <div class="panel panel-success">
+                      <div class="panel-heading text-center"><span class="glyphicon glyphicon-camera"></span> Photos</div>
+                      <div class="panel-body">
+                        {% if etablissement.photo1 != "" %}  
+                        <img src="{{ asset('uploads/avatar/' ~ etablissement.photo1) }} "width="80px" height="80px">
+                        {% endif %}
+                        {% if etablissement.photo2 != "" %}
+                        <img src="{{ asset('uploads/avatar/' ~ etablissement.photo2) }} "width="80px" height="80px">
+                        {% endif %}
+
+                        {% if etablissement.photo3 != "" %}
+                        <img src="{{ asset('uploads/avatar/' ~ etablissement.photo3) }} "width="80px" height="80px">
+                        {% endif %}
+
+                        {% if etablissement.photo4 != "" %}
+                        <img src="{{ asset('uploads/avatar/' ~ etablissement.photo4) }} "width="80px" height="80px">
+                        {% endif %}
+
+                        {% if etablissement.photo5 != "" %}
+                        <img src="{{ asset('uploads/avatar/' ~ etablissement.photo5) }} "width="80px" height="80px">
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <br>
+                  
+                  <div class="col-lg-12">
+                    <div class="text-center">
+                      <a data-toggle="modal" href="#valider_etablissement{{i}}"   class="btn btn-success">
+                        <i class="glyphicon glyphicon-ok"></i>
+                        Valider cette demande
+                      </a>
+                      <div class="modal" id="valider_etablissement{{i}}" >
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">x</button>
+                              <h4 class="modal-title">Voulez vous vraiment valider {{etablissement.nomEtablissement}} ?</h4>
+                            </div>
+                            <div class="modal-body">
+                             <a href="{{ path('lds_platform_admin_valider_etablissement', {'siret': etablissement.siret}) }}" class="btn btn-success">Oui</a>
+                             <button class="btn btn-info" data-dismiss="modal">Non</button>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
+
+                     <a data-toggle="modal" href="#refuser_etablissement{{i}}" class="btn btn-danger">
+                      <i class="glyphicon glyphicon-trash"></i>
+                      Supprimer cette demande
+                    </a>
+                    <div class="modal" id="refuser_etablissement{{i}}">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">x</button>
+                            <h4 class="modal-title">Voulez vous vraiment supprimer la demande de {{etablissement.nomEtablissement}} ?</h4>
+                          </div>
+                          <div class="modal-body">
+                           <a href="{{ path('lds_platform_admin_refuser_etablissement', {'siret': etablissement.siret}) }}" class="btn btn-success">Oui</a>
+                           <button class="btn btn-info" data-dismiss="modal">Non</button>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+
+                   {% set i = i + 1 %}
+                 </div>
+               </div>
+
+             </div>
+           </div>
+         </div>
+         {% endfor %}
+
+       </div>
+
+       {% endblock ldsplatform_body %}

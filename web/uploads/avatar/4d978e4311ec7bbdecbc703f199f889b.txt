@@ -1,0 +1,94 @@
+public class Graphe {
+ 
+ //sommet 0-> depart dernier sommet-> arrivee
+ private int nb_sommet;
+ private Sommet list_sommet;
+ private Sommet last;
+
+ //constructeur de base qui initialise un graphe vide
+ public Graphe() {
+  this.nb_sommet=0;
+  this.list_sommet=null;
+ }
+ 
+ //methode permettant l'ajout d'un sommet au graphe
+ public void addSommet() {
+  //si le nb de sommet est egal a 0 alors le premier maillon prend la valeur du nouveau sommet
+  if (nb_sommet==0) {
+   this.list_sommet= new Sommet(this.nb_sommet);
+  //sinon on parcout toute la liste jusqu'a trouver le dernier
+  } else {
+   Sommet s=list_sommet;
+   while((s.getSuivant()!=null)) {
+    s=s.getSuivant();
+   }
+   //lorsque c'est le dernier on lui ajoute un nouveau sommet en tant que suivant
+   s.setSuivant(new Sommet(this.nb_sommet));
+  }
+  this.nb_sommet++;
+ }
+ //Methode permettant d'afficher tous les sommets d'un graphe
+  public void afficheSommet() {
+  System.out.println("add");
+  if (nb_sommet==0) {
+   System.out.println("Aucun sommet");
+  } else {
+   Sommet s=list_sommet;
+   //
+   while((s!=null)) {
+    System.out.println("Sommet("+s.getId()+") -> marquage : "+s.getSymboleMarquage());
+    s.afficheArete();
+    s=s.getSuivant();
+   }
+  }
+ }
+ public Sommet getSommet(int id) {
+  Sommet s=this.list_sommet;
+  for (int i=0; i<id; i++) {
+   s=s.getSuivant();
+  }
+  return s;
+ }
+ 
+ //permet tous les marquages du graphe
+ public void reinitialiserMarquage() {
+        Sommet s = this.list_sommet.getSuivant();
+        while(s!=null) {
+          s.supprimerMarqueur();
+          s = s.getSuivant();
+        }
+    }
+
+ public void marquageGraphe() {
+ 	Sommet s = this.list_sommet;
+ 	while(s!=null) {
+
+ 		Arete a=s.getListeAdjacence();
+ 		while (a!=null) {
+ 			Sommet v=this.getSommet(a.getArrivee());
+ 			if (v.estMarque()==false) {
+ 				if (a.getFlot()<a.getCapacite()) {
+ 					v.setSymboleMarquage("+"+s.getId());
+ 				}
+ 			}
+ 			a=a.getSuivant();
+ 		}
+ 		s=s.getSuivant();
+ 	}
+
+ 	for (int i=0; i<nb_sommet; i++) {
+ 		Sommet s = this.list_sommet;
+ 		while(s!=null) {
+ 			Arete a = s.getListeAdjacence();
+ 			while (a!=null) {
+ 				if (a.getOrigine()==i) {
+ 					
+ 				}
+ 				a=a.getSuivant();
+ 			}
+ 		}
+ 	}
+
+ }
+
+}

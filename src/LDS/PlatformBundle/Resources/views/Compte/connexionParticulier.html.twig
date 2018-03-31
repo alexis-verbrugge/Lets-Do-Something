@@ -1,0 +1,55 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %}
+
+
+{% block title %}
+Connexion
+{% endblock %}
+
+{% block ldsplatform_body %} 
+
+
+<div class="container-fluid">
+  <h3 class="text-center">Connexion</h3>
+
+  {{ form_start(form, {'attr': {'class': 'well col-xs-6 col-sm-6 col-md-4 col-lg-4 col-xs-offset-3 col-sm-offset-3 col-md-offset-4 col-lg-offset-4'}}) }}
+
+  {# Les erreurs générales du formulaire. #}
+  {{ form_errors(form) }}
+
+
+  {# Génération du label + error + widget pour un champ. #}
+  {{ form_row(form.login) }}
+
+  {{ form_row(form.password) }}
+
+  {% if listeErreurs["erreur_authentification"] is defined %}
+  <p class="alert alert-danger"> {{ listeErreurs["erreur_authentification"] }}</p>
+  {% endif %}
+
+   {% if listeErreurs["banni"] is defined %}
+  <p class="alert alert-danger"> {{ listeErreurs["banni"] }}</p>
+  {% endif %}
+
+  {% if listeErreurs["erreur_inexistant"] is defined %}
+  <p class="alert alert-danger"> {{ listeErreurs["erreur_inexistant"] }}</p>
+  {% endif %}
+  {{ form_row(form.compte) }}
+
+
+  {# Pour le bouton, pas de label ni d'erreur, on affiche juste le widget #}
+  <div class="row">
+    <div class="text-center">
+      {{ form_widget(form.connexion, {'attr': {'class': 'btn btn-primary'}}) }}
+    </div>
+  </div>
+
+  {# Génération automatique des champs pas encore écrits.
+     Dans cet exemple, ce serait le champ CSRF (géré automatiquement par Symfony !)
+     et tous les champs cachés (type « hidden »). #}
+     {{ form_rest(form) }}
+
+     {# Fermeture de la balise <form> du formulaire HTML #}
+      {{ form_end(form) }}
+    </div>
+
+    {% endblock ldsplatform_body %}

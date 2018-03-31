@@ -1,0 +1,140 @@
+{% extends "LDSPlatformBundle::layout_admin.html.twig" %}
+
+
+{% block title %}
+Demandes d'événements
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<div class="container">
+
+
+<div class="text-center">
+      <ul class="pagination">
+    {% if count>3 %}
+            {% if pagination.page>1 %}
+                <li><a href="{{ path(pagination.route,
+      pagination.route_params|merge({'page': 1})) }}"><<</a></li>
+                  <li><a href="{{ path(pagination.route,
+        pagination.route_params|merge({'page': pagination.page-1})) }}"><</a></li>
+                {% endif %}
+                {% for p in range(max(pagination.page-4, 1),min(pagination.page+4, pagination.pages_count)) %}
+                    <li {% if p == pagination.page %} class="active"{% endif %}><a href="{{ path(pagination.route,
+          pagination.route_params|merge({'page': p})) }}">{{ p }}</a></li>
+                  {% endfor %}
+                  {% if pagination.page<pagination.pages_count %}
+                      <li><a href="{{ path(pagination.route,
+            pagination.route_params|merge({'page': pagination.page+1})) }}">></a></li>
+                        <li><a href="{{ path(pagination.route,
+              pagination.route_params|merge({'page': pagination.pages_count})) }}">>></a></li>
+                      {% endif %}
+              {% endif %}
+                </ul>
+          </div>
+          
+
+          <h3 class="text-center">Demandes d'événements</h3>
+
+           {% if listeEvenement is empty %}
+            <div class="col-md-6 col-lg-6 col-lg-offset-3 text-center alert alert-info">
+              Aucune demande d'événement
+            </div>
+            {% endif %}
+
+  {% set i = 0 %}
+          {% for evenement in listeEvenement %}
+          <div class="panel-group col-md-6 col-lg-6">
+            <div class="panel panel-default">
+              <div class="text-center panel-heading"><h5>{{evenement.nom}}</h5></div>
+              <div class="panel-body">
+                <p>
+                  <strong>Nom</strong> : {{evenement.nom}}<br>
+                  <strong>Etablissement</strong> : {{evenement.etablissement.nomEtablissement}}<br>
+                  <strong>Dates</strong> : {{evenement.dateDebut|date("m/d/Y") }}-{{evenement.dateFin|date("m/d/Y") }}<br>
+                  <strong>Heures</strong> : {{evenement.heureDebut|date('H:i') }}-{{evenement.heureFin|date('H:i') }}<br>
+                  <strong>Description</strong> : {{evenement.description }}<br>
+                  <strong>Tags</strong> : {% for tag in evenement.etablissement.tags %} 
+                  {{ tag.nom ~ " " }}
+                  {% endfor %} <br>                 
+                </p>
+
+                <div class="col-md-12 col-lg-12">
+                  <div class="panel panel-success">
+                    <div class="panel-heading text-center"><span class="glyphicon glyphicon-camera"></span> Photos</div>
+                    <div class="panel-body">
+                      {% if evenement.photo1 != "" %}  
+                      <img src="{{ asset('uploads/avatar/' ~ evenement.photo1) }} "width="80px" height="80px">
+                      {% endif %}
+
+                      {% if evenement.photo2 != "" %}  
+                      <img src="{{ asset('uploads/avatar/' ~ evenement.photo2) }} "width="80px" height="80px">
+                      {% endif %}
+
+                      {% if evenement.photo3 != "" %}  
+                      <img src="{{ asset('uploads/avatar/' ~ evenement.photo3) }} "width="80px" height="80px">
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-lg-12">
+                  <div class="text-center">
+                    <a data-toggle="modal" href="#accepter_events{{i}}"  class="btn btn-success">
+      <i class="glyphicon glyphicon-ok"></i>
+      Accepter cet evenement
+    </a>
+
+    <div class="modal" id="accepter_events{{i}}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">x</button>
+        <h4 class="modal-title">Voulez vous vraiment accepter {{evenement.nom}} sur le site ?</h4>
+      </div>
+      <div class="modal-body">
+         <a href="{{ path('lds_platform_admin_accepter_evenement', {'id': evenement.id}) }}" class="btn btn-success">Oui</a>
+        <button class="btn btn-info" data-dismiss="modal">Non</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </a>
+    <a data-toggle="modal" href="#refuser_event{{i}}" class="btn btn-danger">
+      <i class="glyphicon glyphicon-trash"></i>
+      Refuser cet evenement
+    </a>
+
+    <div class="modal" id="refuser_event{{i}}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">x</button>
+        <h4 class="modal-title">Voulez vous vraiment refuser {{evenement.nom}} ?</h4>
+      </div>
+      <div class="modal-body">
+         <a  href="{{ path('lds_platform_admin_refuser_evenement', {'id': evenement.id}) }}" class="btn btn-success">Oui</a>
+        <button class="btn btn-info" data-dismiss="modal">Non</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <br><br>
+
+
+  {% set i = i + 1 %}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          {% endfor %}
+
+
+      </div>
+
+
+      {% endblock ldsplatform_body %}

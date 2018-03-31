@@ -1,0 +1,39 @@
+{% extends "LDSPlatformBundle::layout.html.twig" %} 
+{% block title %}
+Proposer tag
+{% endblock %}
+
+{% block ldsplatform_body %}
+  
+<div class="container-fluid">
+  <h3 class="text-center">Proposer un nouveau tag</h3>
+
+
+   {{ form_start(form, {'attr': {'class': 'well col-xs-6 col-sm-6 col-md-4 col-lg-4 col-xs-offset-3 col-sm-offset-3 col-md-offset-4 col-lg-offset-4'}}) }}
+
+  {{ form_errors(form) }}
+
+  {% if listeErreurs["spam"] is defined %}
+   <p class="alert alert-danger"> {{listeErreurs["spam"]}} </p>
+  {% endif %}
+
+  
+  {{ form_row(form.nom) }}
+
+  {% if listeErreurs["tag_erreur"] is defined %}
+   <p class="alert alert-danger"> {{ listeErreurs["tag_erreur"] }} </p>
+  {% endif %}
+ 
+
+  {{ form_row(form.description) }}
+ <div class="text-center">
+  {{ form_widget(form.demander, {'attr': {'class': 'btn btn-primary'}}) }}
+</div>
+  {{ form_rest(form) }}
+
+  {{ form_end(form) }}
+
+  
+</div>
+
+{% endblock ldsplatform_body %}

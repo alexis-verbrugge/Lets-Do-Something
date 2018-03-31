@@ -1,0 +1,338 @@
+#contoleur chargé pour la page d'accueil (à changer plus tard)
+lds_platform_homepage:
+    path:     /
+    defaults: { _controller: LDSPlatformBundle:Etablissement:meilleursEtablissements }
+
+lds_platform_homepage_pro:
+    path:     pro/
+    defaults: { _controller: LDSPlatformBundle:Professionnel:accueil }
+
+lds_platform_homepage_particulier:
+    path:     particulier/
+    defaults: { _controller: LDSPlatformBundle:Particulier:accueil }
+
+lds_platform_homepage_admin:
+    path:     admin/
+    defaults: { _controller: LDSPlatformBundle:Admin:accueil }
+
+#controleur Etablissement
+
+#Etablissements
+lds_platform_liste:
+    path:      liste/
+    defaults: { _controller: LDSPlatformBundle:Etablissement:liste }
+
+lds_platform_detail:
+    path:      detail/{siret}/{id}
+    defaults: { _controller: LDSPlatformBundle:Etablissement:detail }
+
+lds_platform_trouver_etablissement:
+    path:      trouver/etablissement/{id}/{page}
+    defaults: { _controller: LDSPlatformBundle:Etablissement:trouverEtablissement }
+
+lds_platform_trouver_evenement:
+    path:      trouver/evenement/{id}/{page}
+    defaults: { _controller: LDSPlatformBundle:Etablissement:trouverEvenement }
+
+lds_platform_meilleurs_etablissements:
+    path:      meilleurs/etablissement
+    defaults: { _controller: LDSPlatformBundle:Etablissement:meilleursEtablissements }
+
+#Evenements
+lds_platform_evenement_liste:
+    path:      liste/evenement
+    defaults: { _controller: LDSPlatformBundle:Etablissement:listeEvenement }
+
+lds_platform_evenement_detail:
+    path:      detail/evenement/{id}/{id2}
+    defaults: { _controller: LDSPlatformBundle:Etablissement:detailEvenement}
+
+#controleur Compte
+lds_platform_inscription_particulier:
+    path:      inscription/particulier
+    defaults: { _controller: LDSPlatformBundle:Compte:inscription }
+
+lds_platform_connexion:
+    path:      connexion/
+    defaults: { _controller: LDSPlatformBundle:Compte:connexion }
+
+lds_platform_deconnexion:
+    path:      deconnexion/
+    defaults: { _controller: LDSPlatformBundle:Compte:deconnexion }
+
+lds_platform_inscription_professionnel:
+    path:      inscription/professionnel/{id}
+    defaults: { _controller: LDSPlatformBundle:Compte:inscriptionPro }
+
+lds_platform_inscription_etablissement:
+    path:      inscription/etablissement/{id}/{id2}
+    defaults: { _controller: LDSPlatformBundle:Compte:inscriptionEtablissement }
+
+lds_platform_choisir_localisation:
+    path:      choisir/localisation/
+    defaults: { _controller: LDSPlatformBundle:Compte:choisirLocalisation }
+
+    
+#Ce qui concerne le systeme ajax
+ajax_autocompletion_ville:
+  path:  ajax/autocomplete/ville
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionVille }
+
+ajax_autocompletion_ville_inscription:
+  path:  inscription/ajax/autocomplete/ville
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionVille }
+
+ajax_autocompletion_ville_inscription_pro:
+  path:  inscription/professionnel/ajax/autocomplete/ville
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionVille }
+
+ajax_autocompletion_ville_inscription_etablissement_1:
+  path:  inscription/etablissement/1/ajax/autocomplete/ville
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionVille }
+
+ajax_autocompletion_ville_inscription_etablissement_2:
+  path:  inscription/etablissement/2/ajax/autocomplete/ville
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionVille }
+
+ajax_autocompletion_ville_inscription_etablissement_3:
+  path:  inscription/etablissement/3/ajax/autocomplete/ville
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionVille }
+
+ajax_autocompletion_ville_recherche_etablissement_1:
+  path:  trouver/etablissement/1/ajax/autocomplete/ville
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionVille }
+
+ajax_autocompletion_ville_recherche_etablissement_2:
+  path:  trouver/etablissement/2/ajax/autocomplete/ville
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionVille }
+
+ajax_autocompletion_ville_recherche_evenement_1:
+  path:  trouver/evenement/1/ajax/autocomplete/ville
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionVille }
+
+ajax_autocompletion_ville_recherche_evenement_2:
+  path:  trouver/evenement/2/ajax/autocomplete/ville
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionVille }
+
+ajax_repondre:
+  path: ajax/repondre
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:repondre }
+
+
+ajax_autocomplete_etablissement_accueil:
+  path:  ajax/autocomplete/etablissement
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionEtablissement }
+
+ajax_autocomplete_etablissement_admin:
+  path:  admin/etablissement/ajax/autocomplete/etablissement
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:autocompletionEtablissement }
+
+ajax_localisation:
+  path:  ajax/localisation
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:getLocalisation }
+
+ajax_localisation_pro:
+  path:  pro/modifier/etablissement/ajax/localisation/etablissement 
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:changerLocalisationEtablissement }
+
+ajax_localisation_etablissement_1:
+  path:  inscription/etablissement/1/ajax/localisation/etablissement
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:changerLocalisationEtablissement }
+
+ajax_localisation_etablissement_2:
+  path:  inscription/etablissement/2/ajax/localisation/etablissement
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:changerLocalisationEtablissement }
+
+ajax_autocomplete_etablissement_3:
+  path:  inscription/etablissement/3/1/ajax/localisation/etablissement
+  defaults: { _controller: LDSPlatformBundle:AjaxAutocomplete:changerLocalisationEtablissement }
+
+#controleur Admin
+
+#gestion des messages
+lds_platform_admin_liste_message:
+    path:      admin/message/{page}
+    defaults: { _controller: LDSPlatformBundle:Admin:listeMessage }
+
+lds_platform_admin_effacer_message:
+    path:      admin/effacer/message/{id}
+    defaults: { _controller: LDSPlatformBundle:Admin:effacerMessage }
+
+lds_platform_admin_repondre_message:
+    path:      admin/repondre/message/{id}
+    defaults: { _controller: LDSPlatformBundle:Admin:repondreMessage }
+
+#gestion des demandes d'etablissement
+lds_platform_admin_liste_demande_etablissement:
+    path:      admin/demande/etablissement/{page}
+    defaults: { _controller: LDSPlatformBundle:Admin:listeDemandeEtablissement }
+
+lds_platform_admin_valider_etablissement:
+    path:      admin/accepter/etablissement/{siret}
+    defaults: { _controller: LDSPlatformBundle:Admin:accepterEtablissement }
+
+lds_platform_admin_refuser_etablissement:
+    path:      admin/refuser/etablissement/{siret}
+    defaults: { _controller: LDSPlatformBundle:Admin:refuserEtablissement }
+
+#gestion de la demande de tags
+lds_platform_admin_liste_demande_tag:
+    path:      admin/demande/tag/{page}
+    defaults: { _controller: LDSPlatformBundle:Admin:listeDemandeTag }
+
+lds_platform_admin_accepter_tag:
+    path:      admin/accepter/tag/{id}
+    defaults: { _controller: LDSPlatformBundle:Admin:accepterTag }
+
+lds_platform_admin_refuser_tag:
+    path:      admin/refuser/tag/{id}
+    defaults: { _controller: LDSPlatformBundle:Admin:refuserTag }
+
+#gestion des comptes
+lds_platform_admin_liste_particulier:
+    path:      admin/particulier/{page}
+    defaults: { _controller: LDSPlatformBundle:Admin:listeParticulier }
+
+lds_platform_admin_detail_particulier:
+    path:      admin/detail/particulier/{login}
+    defaults: { _controller: LDSPlatformBundle:Admin:detailParticulier }
+
+lds_platform_admin_bannir_particulier:
+    path:      admin/bannir/particulier/{login}
+    defaults: { _controller: LDSPlatformBundle:Admin:bannirParticulier }
+
+#gestion des evenements
+lds_platform_admin_liste_demande_evenement:
+    path:      admin/demande/evenement/{page}
+    defaults: { _controller: LDSPlatformBundle:Admin:listeDemandeEvenement }
+
+lds_platform_admin_accepter_evenement:
+    path:      admin/accepter/evenement/{id}
+    defaults: { _controller: LDSPlatformBundle:Admin:accepterEvenement }
+
+lds_platform_admin_refuser_evenement:
+    path:      admin/refuser/evenement/{id}
+    defaults: { _controller: LDSPlatformBundle:Admin:refuserEvenement }
+
+#gestion des etablissements
+lds_platform_admin_etablissement:
+    path:      admin/etablissement/{page}
+    defaults: { _controller: LDSPlatformBundle:Admin:listeEtablissement }
+
+lds_platform_admin_supprimer_etablissement:
+    path:      admin/supprimer/etablissement/{siret}
+    defaults: { _controller: LDSPlatformBundle:Admin:supprimerEtablissement }
+
+
+
+
+#Controller du Pro
+lds_platform_pro_liste_etablissement:
+    path:      pro/liste/etablissement
+    defaults: { _controller: LDSPlatformBundle:Professionnel:listeEtablissement }
+
+lds_platform_pro_detail_etablissement:
+    path:      pro/detail/etablissement/{siret}
+    defaults: { _controller: LDSPlatformBundle:Professionnel:detailEtablissement }
+
+lds_platform_pro_detail_evenement:
+    path:      pro/detail/evenement/{id}
+    defaults: { _controller: LDSPlatformBundle:Professionnel:detailEvenement }
+
+lds_platform_pro_creer_evenement:
+    path:      pro/creer/evenement/{siret}
+    defaults: { _controller: LDSPlatformBundle:Professionnel:creerEvenement }
+
+lds_platform_pro_modifier_etablissement:
+    path:      pro/modifier/etablissement/{siret}
+    defaults: { _controller: LDSPlatformBundle:Professionnel:modifierInfosEtablissement }
+
+lds_platform_pro_modifier_evenement:
+    path:      pro/modifier/evenement/{id}
+    defaults: { _controller: LDSPlatformBundle:Professionnel:modifierInfosEvenement }
+
+lds_platform_pro_demande_tag:
+    path:      pro/demander/tag
+    defaults: { _controller: LDSPlatformBundle:Professionnel:demanderTag }
+
+lds_platform_pro_message_admin:
+    path:      pro/message/admin
+    defaults: { _controller: LDSPlatformBundle:Professionnel:messageAdmin }
+
+lds_platform_pro_supprimer_etablissement:
+    path:      pro/supprimer/etablissement/{siret}
+    defaults: { _controller: LDSPlatformBundle:Professionnel:supprimerEtablissement }
+
+lds_platform_pro_supprimer_evenement:
+    path:      pro/supprimer/evenement/{id}
+    defaults: { _controller: LDSPlatformBundle:Professionnel:supprimerEvenement }
+
+
+#Controller du Particulier
+lds_platform_particulier_ajouter_etablissement_favori:
+    path:      particulier/ajouter/etablissement/favori/{siret}
+    defaults: { _controller: LDSPlatformBundle:Particulier:ajouterEtablissementFavori }
+
+lds_platform_particulier_supprimer_etablissement_favori:
+    path:      particulier/supprimer/etablissement/favori/{siret}
+    defaults: { _controller: LDSPlatformBundle:Particulier:supprimerEtablissementFavori }
+
+lds_platform_particulier_ajouter_evenement_favori:
+    path:      particulier/ajouter/evenement/favori/{id}
+    defaults: { _controller: LDSPlatformBundle:Particulier:ajouterEvenementFavori }
+
+lds_platform_particulier_supprimer_evenement_favori:
+    path:      particulier/supprimer/evenement/favori/{id}
+    defaults: { _controller: LDSPlatformBundle:Particulier:supprimerEvenementFavori }
+
+lds_platform_particulier_liste_etablissement_favori:
+    path:      particulier/liste/etablissement/favori
+    defaults: { _controller: LDSPlatformBundle:Particulier:listeEtablissementFavori}
+
+lds_platform_particulier_liste_evenement_favori:
+    path:      particulier/liste/evenement/favori
+    defaults: { _controller: LDSPlatformBundle:Particulier:listeEvenementFavori}
+
+lds_platform_particulier_ajouter_commentaire_etablissement:
+    path:      particulier/ajouter/commentaire/etablissement
+    defaults: { _controller: LDSPlatformBundle:Particulier:ajouterCommentaireEtablissement }
+
+lds_platform_particulier_ajouter_commentaire_evenement:
+    path:      particulier/ajouter/commentaire/evenement
+    defaults: { _controller: LDSPlatformBundle:Particulier:ajouterCommentaireEvenement }
+
+lds_platform_particulier_creer_fiche_soiree:
+    path:      particulier/creer/soiree/{siret}
+    defaults: { _controller: LDSPlatformBundle:Particulier:creerFicheSoiree }
+
+lds_platform_particulier_invitations_groupe_soiree:
+    path:      particulier/invitations/soiree
+    defaults: { _controller: LDSPlatformBundle:Particulier:invitationsGroupeSoiree }
+
+lds_platform_particulier_rejoindre_groupe_soiree:
+    path:      particulier/rejoindre/soiree/{id}
+    defaults: { _controller: LDSPlatformBundle:Particulier:rejoindreGroupeSoiree }
+
+lds_platform_particulier_refuser_groupe_soiree:
+    path:      particulier/refuser/soiree/{id}
+    defaults: { _controller: LDSPlatformBundle:Particulier:refuserGroupeSoiree }
+
+lds_platform_particulier_liste_groupe_soiree:
+    path:      particulier/liste/soiree
+    defaults: { _controller: LDSPlatformBundle:Particulier:listeGroupeSoiree }
+
+lds_platform_particulier_detail_fiche_soiree:
+    path:      particulier/detail/soiree/{id}
+    defaults: { _controller: LDSPlatformBundle:Particulier:detailFicheSoiree }
+
+lds_platform_particulier_ajouter_message_groupe:
+    path:      particulier/ajouter/message/soiree
+    defaults: { _controller: LDSPlatformBundle:Particulier:ajouterMessageGroupeSoiree }
+
+lds_platform_particulier_modifier_info:
+    path:      particulier/modifier/info
+    defaults: { _controller: LDSPlatformBundle:Particulier:modifierInfoPersonnelles }
+
+lds_platform_supprimer_commntaire:
+    path:      supprimer/commentaire/{id}/{redirection}
+    defaults: { _controller: LDSPlatformBundle:Particulier:supprimerCommentaire }

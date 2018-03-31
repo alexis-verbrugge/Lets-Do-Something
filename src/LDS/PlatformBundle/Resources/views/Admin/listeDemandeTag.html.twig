@@ -1,0 +1,115 @@
+{% extends "LDSPlatformBundle::layout_admin.html.twig" %}
+
+
+{% block title %}
+Demandes de tags
+{% endblock %}
+
+{% block ldsplatform_body %}
+
+<div class="container">
+
+ 
+  <div class="text-center">
+        <ul class="pagination">
+      {% if count>4 %}
+              {% if pagination.page>1 %}
+                  <li><a href="{{ path(pagination.route,
+        pagination.route_params|merge({'page': 1})) }}"><<</a></li>
+                    <li><a href="{{ path(pagination.route,
+          pagination.route_params|merge({'page': pagination.page-1})) }}"><</a></li>
+                  {% endif %}
+                  {% for p in range(max(pagination.page-4, 1),min(pagination.page+4, pagination.pages_count)) %}
+                      <li {% if p == pagination.page %} class="active"{% endif %}><a href="{{ path(pagination.route,
+            pagination.route_params|merge({'page': p})) }}">{{ p }}</a></li>
+                    {% endfor %}
+                    {% if pagination.page<pagination.pages_count %}
+                        <li><a href="{{ path(pagination.route,
+              pagination.route_params|merge({'page': pagination.page+1})) }}">></a></li>
+                          <li><a href="{{ path(pagination.route,
+                pagination.route_params|merge({'page': pagination.pages_count})) }}">>></a></li>
+                        {% endif %}
+                {% endif %}
+                  </ul>
+            </div>
+            
+
+            <h3 class="text-center">Demandes de tags</h3>
+
+            {% if listeTag is empty %}
+            <div class="col-md-6 col-lg-6 col-lg-offset-3 text-center alert alert-info">
+              Aucune demande de tag
+            </div>
+            {% endif %}
+
+            {% set i = 0 %}
+            {% for tag in listeTag %}
+            <div class="panel-group col-md-6 col-lg-6">
+              <div class="panel panel-default">
+                <div class="text-center panel-heading"><h5>{{tag.nom}}</h5></div>
+                <div class="panel-body">
+                  <p>
+                    <strong>Nom du tag</strong> : {{tag.nom}}<br>
+                    <strong>Demandeur</strong> : {{tag.proprietaire}} <br><br>
+                    <strong>Motif</strong> : 
+                    "{{tag.description }}"
+                  </p>
+
+                  <div class="col-lg-12">
+                    <div class="text-center">
+                      </a>
+    <a data-toggle="modal" href="#accepter_tag{{i}}"  class="btn btn-success">
+      <i class="glyphicon glyphicon-ok"></i>
+      Accepter ce tag
+    </a>
+
+    <div class="modal" id="accepter_tag{{i}}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">x</button>
+        <h4 class="modal-title">Voulez vous vraiment accepter ce nouveau tag ?</h4>
+      </div>
+      <div class="modal-body">
+         <a href="{{ path('lds_platform_admin_accepter_tag', {'id': tag.id}) }}" class="btn btn-success">Oui</a>
+        <button class="btn btn-info" data-dismiss="modal">Non</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </a>
+    <a data-toggle="modal" href="#refuser_tag{{i}}" class="btn btn-danger">
+      <i class="glyphicon glyphicon-trash"></i>
+      Refuser ce tag
+    </a>
+
+    <div class="modal" id="refuser_tag{{i}}">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">x</button>
+        <h4 class="modal-title">Voulez vous vraiment supprimer cette demande de tag ?</h4>
+      </div>
+      <div class="modal-body">
+         <a  href="{{ path('lds_platform_admin_refuser_tag', {'id': tag.id}) }}" class="btn btn-success">Oui</a>
+        <button class="btn btn-info" data-dismiss="modal">Non</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <br><br>
+  {% set i = i + 1 %}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+
+          </div>
+
+
+          {% endblock ldsplatform_body %}
